@@ -1,7 +1,22 @@
-export default function App () {
+function App () {
   return (
     <div className="App">
-      <button>123</button>
+      <div>
+        <div className='flex flex-row items-center'>
+          <IconMdiSearch/>
+          <span className="text-sm">Search</span>
+        </div>
+        <div className='flex flex-row items-center'>
+          <IconMdiUpdate/>
+          <span className="text-sm">Updates</span>
+        </div>
+        <div className='flex flex-row items-center'>
+          <IconMdiCog/>
+          <span className="text-sm">Updates</span>
+        </div>
+      </div>
     </div>
   )
 }
+
+export default App
