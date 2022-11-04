@@ -12,7 +12,8 @@
     "mobx": "^6.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.6.0"
+    "react-icons": "^4.6.0",
+    "react-use": "^17.4.0"
   },
   "devDependencies": {
     "@iconify/json": "^2.1.133",

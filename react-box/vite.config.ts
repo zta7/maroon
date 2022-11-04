@@ -15,6 +15,9 @@ export default defineConfig({
         IconsResolver({
           componentPrefix: 'Icon'
         })
+      ],
+      dirs: [
+        'src/components/basic'
       ]
     }),
     Icons({
