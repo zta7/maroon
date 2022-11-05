@@ -4,7 +4,7 @@ interface Props {
 
 export const LeftDrawer = ({ children }: Props) => {
   return (
-    <div className="LeftDrawer w-56 h-full bg-neutral-100 text-gray-500">
+    <div className="LeftDrawer group/LeftDrawer w-56 h-full bg-neutral-100 text-gray-500">
       {children}
     </div>
   )
