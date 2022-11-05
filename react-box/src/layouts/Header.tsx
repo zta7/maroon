@@ -1,3 +1,3 @@
 export const Header = () => {
-  return <div>123</div>
+  return <div className="Header h-10 bg-blue-400">im header</div>
 }
