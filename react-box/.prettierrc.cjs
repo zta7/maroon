@@ -4,8 +4,8 @@ module.exports = {
   "semi": false,
   // "singleQuote": true,
   // "trailingComma": "none",
-  "bracketSpacing": false,
-  "jsxBracketSameLine": false,
+  "bracketSpacing": true,
+  "bracketSameLine": true,
   // "arrowParens": "always"
 
   plugins: ['prettier-plugin-tailwindcss'],
