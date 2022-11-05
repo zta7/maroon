@@ -5,8 +5,11 @@
         "node": true
     },
     "extends": [
+        "eslint:recommended",
         "plugin:react/recommended",
         "standard",
+        "plugin:prettier/recommended"
+        // "prettier-plugin-tailwindcss"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -18,10 +21,14 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
-        "react/react-in-jsx-scope": "off"
+        "no-undef": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-no-undef": "off",
+        "prettier/prettier": "error"
     },
     "settings": {
         "react": {
