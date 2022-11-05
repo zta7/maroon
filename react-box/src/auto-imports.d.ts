@@ -5,6 +5,7 @@ declare global {
   const IconMdiCoffee: typeof import('~icons/mdi/coffee')['default']
   const IconMdiCog: typeof import('~icons/mdi/cog')['default']
   const IconMdiMore: typeof import('~icons/mdi/more')['default']
+  const IconMdiPlus: typeof import('~icons/mdi/plus')['default']
   const IconMdiSearch: typeof import('~icons/mdi/search')['default']
   const IconMdiUpdate: typeof import('~icons/mdi/update')['default']
   const Link: typeof import('react-router-dom')['Link']
