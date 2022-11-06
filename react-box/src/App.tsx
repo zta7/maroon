@@ -16,7 +16,7 @@ function App() {
         </div>
       </div>
       <div
-        className="absolute right-0 top-0 bottom-0 flex flex-row"
+        className="right-0 top-0 bottom-0 flex flex-row"
         style={{ width: "400px" }}>
         <div className="h-full w-px bg-red-800"></div>
         <RightDrawer />

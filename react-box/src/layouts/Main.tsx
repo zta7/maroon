@@ -1,4 +1,33 @@
+import { KeyboardEventHandler } from "react"
+
 export const Main = () => {
+  // const [isEdit, setIsEdit] = useState(false)
+  const [count, setCount] = useState(0)
+  const handleCount = () => {
+    setCount(count + 1)
+  }
+  const handleKeyDown = (event: any): KeyboardEventHandler<HTMLDivElement> => {
+    return () => {
+      if (
+        event.currentTarget.innerHTML.length === 0 &&
+        event.key === "Backspace"
+      ) {
+        setCount(count - 1)
+      }
+      if (event.key === "Enter") {
+        setCount(count + 1)
+        //跳转到下个div
+      }
+    }
+  }
+  const handleMainClick = () => {
+    if (count !== 0) {
+      console.log("preventdefault")
+      // mainRef.current.onclick = handleCount()
+    }
+  }
+
+  const mainRef = useRef<HTMLElement>()
   return (
     <div className="Main m-auto flex h-full max-w-4xl  grow cursor-text flex-col text-sm opacity-40">
       <div className=" flex w-full flex-col">
@@ -28,32 +57,61 @@ export const Main = () => {
           </div>
         </div>
       </div>
-      <main className="flex grow flex-col  px-24 pb-36">
-        <div
-          onClick={() => console.log("点击转换可编辑div")}
-          className="whitespace-pre-wrap break-words py-1.5 pr-2 pl-1.5 pb-6">
-          Press Enter to continue with an empty page, or pick a template (↑↓ to
-          select)
-        </div>
+      <div className="flex grow flex-row">
+        <main
+          onClick={handleMainClick}
+          className="flex flex w-0  grow grow flex-col flex-col  px-24 pb-36 ">
+          {count ? (
+            <>
+              <MenuContent handleKeyDown={handleKeyDown} />
+            </>
+          ) : (
+            <MainPage onClick={() => handleCount()} />
+          )}
+        </main>
+      </div>
+    </div>
+  )
+}
+
+const MenuContent = ({ handleKeyDown }: { handleKeyDown: any }) => {
+  return (
+    <div
+      className="whitespace-pre-wrap break-words py-1.5 pr-2 pl-2 pb-6"
+      contentEditable="true"
+      spellCheck="true"
+      onKeyDown={(e) => handleKeyDown(e)(e)}
+      placeholder="Type '/' for commands"></div>
+  )
+}
+
+const MainPage = ({ onClick }: { onClick: any }) => {
+  return (
+    <>
+      <div
+        onClick={onClick}
+        className="whitespace-pre-wrap break-words py-1.5 pr-2 pl-1.5 pb-6">
+        Press Enter to continue with an empty page, or pick a template (↑↓ to
+        select)
+      </div>
+      <div>
         <div>
           <div>
-            <div>
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            </div>
-            <div>
-              <div className="p-1.5 pt-6 pr-2 pl-1.5">DATABASE</div>
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-              <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            </div>
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+          </div>
+          <div>
+            <div className="p-1.5 pt-6 pr-2 pl-1.5">DATABASE</div>
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   )
 }
 
