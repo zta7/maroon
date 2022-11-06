@@ -1,7 +1,3 @@
 export const RightDrawer = () => {
-  return (
-    <div className="RightDrawer bg-green-200" style={{ width: "200px" }}>
-      456
-    </div>
-  )
+  return <div className="RightDrawer mt-10 h-full w-full">789</div>
 }
