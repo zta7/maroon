@@ -18,7 +18,7 @@ const rows1 = [
 const rows2 = Array.from({ length: 100 })
 export const LeftDrawer = () => {
   return (
-    <div className="LeftDrawer group/LeftDrawer col-span-1 row-span-full flex h-full w-56 flex-col bg-neutral-100 text-gray-500">
+    <div className="LeftDrawer group/LeftDrawer col-span-1 row-span-full flex h-full w-56 flex-shrink-0 flex-col bg-neutral-100 text-gray-500">
       <div className="flex h-10 shrink-0 flex-row items-center px-3 hover:bg-neutral-200">
         <div className="mr-2">
           <IconMdiCoffee />
@@ -38,12 +38,6 @@ export const LeftDrawer = () => {
             key={title}>
             <div className="mr-2">{icon}</div>
             <span className="text-sm">{title}</span>
-            {tooltip && (
-              <div className="absolute left-full ml-2 hidden flex-wrap rounded bg-black px-2 py-1 text-xs text-white shadow-lg group-hover/item:flex">
-                <div className="whitespace-pre">{tooltip.title}</div>
-                <div className="text-gray-400">{tooltip.shortcut}</div>
-              </div>
-            )}
           </div>
         )
       })}
