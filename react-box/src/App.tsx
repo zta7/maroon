@@ -4,6 +4,7 @@ import { Main } from "./layouts/Main"
 import { RightDrawer } from "./layouts/RightDrawer"
 
 function App() {
+  console.log("App")
   return (
     <div className="flex h-full w-full select-none flex-row">
       <LeftDrawer />

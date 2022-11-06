@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/react-dom-interactions": "^0.10.3",
     "mobx": "^6.6.2",
     "mobx-state-tree": "^5.1.6",
     "react": "^18.2.0",
