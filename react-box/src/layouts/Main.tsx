@@ -2,6 +2,7 @@ import { KeyboardEventHandler } from "react"
 
 export const Main = () => {
   const [count, setCount] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
   const handleCount = () => {
     setCount(count + 1)
   }
@@ -12,6 +13,7 @@ export const Main = () => {
         event.key === "Backspace"
       ) {
         setCount(count - 1)
+        setIsOpen(false)
         console.log(count)
         //跳转到上个div 并且合并剩余文本
       }
@@ -23,6 +25,10 @@ export const Main = () => {
         setCount(count + 1)
         console.log(count)
         //跳转到下个div
+      }
+      if (event.currentTarget.innerHTML.length === 0 && event.key === "/") {
+        setIsOpen(true)
+        alert(isOpen)
       }
     }
   }
