@@ -1,7 +1,6 @@
 import { KeyboardEventHandler } from "react"
 
 export const Main = () => {
-  // const [isEdit, setIsEdit] = useState(false)
   const [count, setCount] = useState(0)
   const handleCount = () => {
     setCount(count + 1)
@@ -13,9 +12,16 @@ export const Main = () => {
         event.key === "Backspace"
       ) {
         setCount(count - 1)
+        console.log(count)
+        //跳转到上个div 并且合并剩余文本
       }
-      if (event.key === "Enter") {
+      if (event.key === "Enter" || event.key === "Tab") {
+        if (event.key === "Enter") {
+          alert("press Tab")
+          return
+        }
         setCount(count + 1)
+        console.log(count)
         //跳转到下个div
       }
     }
@@ -62,9 +68,11 @@ export const Main = () => {
           onClick={handleMainClick}
           className="flex flex w-0  grow grow flex-col flex-col  px-24 pb-36 ">
           {count ? (
-            <>
-              <MenuContent handleKeyDown={handleKeyDown} />
-            </>
+            new Array(count) //需要通过count转换成一个数组
+              .fill(1)
+              .map((k, i) => (
+                <MenuContent key={i} handleKeyDown={handleKeyDown} />
+              ))
           ) : (
             <MainPage onClick={() => handleCount()} />
           )}
