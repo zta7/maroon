@@ -4,7 +4,6 @@ import { Main } from "./layouts/Main"
 import { RightDrawer } from "./layouts/RightDrawer"
 
 function App() {
-  console.log("App")
   return (
     <div className="flex h-full w-full select-none flex-row">
       <LeftDrawer />
@@ -17,7 +16,7 @@ function App() {
         </div>
       </div>
       <div
-        className="right-0 top-0 bottom-0 flex flex-row"
+        className="absolute right-0 top-0 bottom-0 flex flex-row"
         style={{ width: "400px" }}>
         <div className="h-full w-px bg-red-800"></div>
         <RightDrawer />
