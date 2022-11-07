@@ -1,22 +1,33 @@
-const rows1 = [
-  {
-    title: "Search",
-    icon: <IconMdiSearch />,
-    tooltip: { title: "Search and jump quickly to a page", shortcut: "cmd+P" },
-  },
-  {
-    title: "Updates",
-    icon: <IconMdiUpdate />,
-    tooltip: {
-      title: "Update All pages in this workspace",
-      shortcut: "cmd+O+P",
-    },
-  },
-  { title: "Settings & Members", icon: <IconMdiCog /> },
-]
+import {
+  useTooltipState,
+  TooltipAnchor,
+  Tooltip,
+} from "../components/basic/Tooltip"
 
-const rows2 = Array.from({ length: 100 })
 export const LeftDrawer = () => {
+  const rows1 = [
+    {
+      title: "Search",
+      icon: <IconMdiSearch />,
+      tooltip: {
+        title: "Search and jump quickly to a page",
+        shortcut: "cmd+P",
+        state: useTooltipState({ placement: "right" }),
+      },
+    },
+    {
+      title: "Updates",
+      icon: <IconMdiUpdate />,
+      tooltip: {
+        title: "Update All pages in this workspace",
+        shortcut: "cmd+O+P",
+        state: useTooltipState({ placement: "right" }),
+      },
+    },
+    { title: "Settings & Members", icon: <IconMdiCog /> },
+  ]
+  const rows2 = Array.from({ length: 100 })
+
   return (
     <div className="LeftDrawer group/LeftDrawer col-span-1 row-span-full flex h-full w-56 flex-shrink-0 flex-col bg-neutral-100 text-gray-500">
       <div className="flex h-10 shrink-0 flex-row items-center px-3 hover:bg-neutral-200">
@@ -31,8 +42,21 @@ export const LeftDrawer = () => {
           <IconMdiChevronDoubleLeft />
         </div>
       </div>
-      {rows1.map(({ title, icon, tooltip }) => {
-        return (
+      {rows1.map(({ title, icon, tooltip }, i) => {
+        return tooltip ? (
+          <TooltipAnchor
+            key={i}
+            state={tooltip.state}
+            className="group/item relative mx-1 flex flex-row items-center rounded px-2 py-1 hover:bg-neutral-200">
+            <div className="mr-2">{icon}</div>
+            <div className="text-sm">{title}</div>
+            <Tooltip state={tooltip.state}>
+              {tooltip.title}
+              <br />
+              {tooltip.shortcut}
+            </Tooltip>
+          </TooltipAnchor>
+        ) : (
           <div
             className="group/item relative mx-1 flex flex-row items-center rounded px-2 py-1 hover:bg-neutral-200"
             key={title}>
