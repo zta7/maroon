@@ -1,8 +1,6 @@
-import {
-  useTooltipState,
-  TooltipAnchor,
-  Tooltip,
-} from "../components/basic/Tooltip"
+// import {
+//   Tooltip,
+// } from "../components/basic/Tooltip"
 
 export const LeftDrawer = () => {
   const rows1 = [
@@ -12,7 +10,6 @@ export const LeftDrawer = () => {
       tooltip: {
         title: "Search and jump quickly to a page",
         shortcut: "cmd+P",
-        state: useTooltipState({ placement: "right" }),
       },
     },
     {
@@ -21,7 +18,6 @@ export const LeftDrawer = () => {
       tooltip: {
         title: "Update All pages in this workspace",
         shortcut: "cmd+O+P",
-        state: useTooltipState({ placement: "right" }),
       },
     },
     { title: "Settings & Members", icon: <IconMdiCog /> },
@@ -43,27 +39,14 @@ export const LeftDrawer = () => {
         </div>
       </div>
       {rows1.map(({ title, icon, tooltip }, i) => {
-        return tooltip ? (
-          <TooltipAnchor
-            key={i}
-            state={tooltip.state}
-            className="group/item relative mx-1 flex flex-row items-center rounded px-2 py-1 hover:bg-neutral-200">
-            <div className="mr-2">{icon}</div>
-            <div className="text-sm">{title}</div>
-            <Tooltip state={tooltip.state}>
-              {tooltip.title}
-              <br />
-              {tooltip.shortcut}
-            </Tooltip>
-          </TooltipAnchor>
-        ) : (
+        return (
           <div
             className="group/item relative mx-1 flex flex-row items-center rounded px-2 py-1 hover:bg-neutral-200"
             key={title}>
             <div className="mr-2">{icon}</div>
             <span className="text-sm">{title}</span>
           </div>
-        )
+          )
       })}
       <div className="h-8 w-full"></div>
       <div className="grow overflow-y-auto">

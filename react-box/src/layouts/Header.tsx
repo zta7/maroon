@@ -1,3 +1,5 @@
+// import { TestDialog } from "../components/dialog/Test"
+
 const btns = [
   { title: "Share", tooltip: "Share or publish to the web." },
   { icon: <IconMdiCommentTextOutline />, tooltip: "View all comments." },
@@ -7,6 +9,9 @@ const btns = [
 ]
 
 export const Header = () => {
+  // const dialog = Dialog.create({
+  //   component: TestDialog
+  // })
   return (
     <div className="Header z-10 flex h-10 flex-row items-center justify-between px-4">
       <div className="rounded p-1 text-sm hover:bg-neutral-200">Title</div>
