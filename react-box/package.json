@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/react-dom-interactions": "^0.10.3",
+    "@tanstack/react-table": "^8.5.22",
     "loadsh": "^0.0.4",
     "mobx": "^6.6.2",
     "mobx-state-tree": "^5.1.6",
