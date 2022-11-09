@@ -3,6 +3,7 @@
 // } from "../components/basic/Tooltip"
 
 import { Table } from "../components/basic/Table"
+import { QueryTest } from "../components/temp/QueryTest"
 
 export const LeftDrawer = () => {
   const rows1 = [
@@ -54,6 +55,7 @@ export const LeftDrawer = () => {
       })}
       <div className="h-8 w-full"></div>
       <div className="grow overflow-y-auto">
+        <QueryTest />
         <Table />
         {/* {rows2.map((e, i) => {
           return <div key={i}>1</div>

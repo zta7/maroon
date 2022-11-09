@@ -1,7 +1,8 @@
 import {
   useReactTable,
-  createColumnHelper,
   getCoreRowModel,
+  flexRender,
+  // getPaginationRowModel,
 } from "@tanstack/react-table"
 
 export const Table = () => {
@@ -25,60 +26,58 @@ export const Table = () => {
     []
   )
 
-  const columnHelper = createColumnHelper<Person>()
-
   const columns = useMemo(
     () => [
-      columnHelper.group({
-        id: "a",
+      {
+        header: "h1",
         columns: [
-          columnHelper.accessor("c1", {
-            cell: (e) => e.getValue(),
-          }),
-          columnHelper.accessor("c2", {
-            cell: (e) => e.getValue(),
-          }),
+          {
+            accessorKey: "c1",
+            minSize: 60,
+            size: 80,
+          },
+          {
+            accessorKey: "c2",
+            minSize: 60,
+            size: 80,
+          },
         ],
-      }),
-      columnHelper.group({
-        id: "b",
+      },
+      {
+        header: "h2",
         columns: [
-          columnHelper.accessor("c3", {
-            cell: (e) => e.getValue(),
-          }),
-          columnHelper.group({
-            id: "c",
+          {
+            accessorKey: "c3",
+            minSize: 60,
+            size: 80,
+          },
+          {
+            header: "h3",
             columns: [
-              columnHelper.accessor("c4", {
-                cell: (e) => e.getValue(),
-              }),
-              columnHelper.accessor("c5", {
-                cell: (e) => e.getValue(),
-              }),
+              {
+                accessorKey: "c4",
+                minSize: 60,
+                size: 80,
+              },
+              {
+                accessorKey: "c5",
+                minSize: 60,
+                size: 80,
+              },
             ],
-          }),
+          },
         ],
-      }),
+      },
     ],
     []
   )
 
-  const [columnVisibility, setColumnVisibility] = useState({})
   const table = useReactTable({
     data,
     columns,
-    state: {
-      columnVisibility,
-    },
     columnResizeMode: "onChange",
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
   })
-
-  //  table.getAllLeafColumns().forEach((e, i) => {
-  //    if(i === 0)
-  //     e.toggleVisibility(false)
-  //  })
 
   return (
     <div className="h-full w-full">
@@ -102,26 +101,48 @@ export const Table = () => {
         })}
       </div>
 
-      <div className="flex flex-col">
-        {table.getHeaderGroups().map((headerGroup) => {
-          return (
-            <div key={headerGroup.id} className="flex flex-row">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <div
-                    key={header.id}
-                    style={{ width: header.getSize() }}
-                    className="relative">
-                    {header.id}
+      <div className="m-1 border" style={{ width: table.getTotalSize() }}>
+        <div className="flex flex-col">
+          {table.getHeaderGroups().map((headerGroup) => {
+            console.log(table.getState())
+
+            return (
+              <div key={headerGroup.id} className="flex flex-row">
+                {headerGroup.headers.map((header) => {
+                  return (
                     <div
-                      {...{
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? "isResizing" : ""
-                        }`,
-                      }}
-                    />
+                      key={header.id}
+                      style={{ width: header.getSize() }}
+                      className="group relative">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`absolute right-0 top-0 bottom-0 w-1 cursor-col-resize select-none
+                         ${
+                           header.column.getIsResizing()
+                             ? "bg-blue-200"
+                             : "group-hover:bg-red-300"
+                         }
+                      `}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })}
+        </div>
+        {table.getRowModel().rows.map((row) => {
+          return (
+            <div key={row.id} className="no-wrap flex flex-row">
+              {row.getVisibleCells().map((cell) => {
+                return (
+                  <div key={cell.id} style={{ width: cell.column.getSize() }}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 )
               })}
@@ -129,21 +150,6 @@ export const Table = () => {
           )
         })}
       </div>
-      {table.getRowModel().rows.map((row) => {
-        return (
-          <div key={row.id} className="no-wrap flex flex-row">
-            {row.getVisibleCells().map((cell) => {
-              return (
-                <div
-                  key={cell.id}
-                  style={{ width: cell.column.columnDef.size }}>
-                  {cell.id}
-                </div>
-              )
-            })}
-          </div>
-        )
-      })}
     </div>
   )
 }
