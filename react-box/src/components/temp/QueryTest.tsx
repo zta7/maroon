@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { api } from "src/boot/axios"
 
 export const QueryTest = () => {
-  const { isLoading, error, data, isFetching } = useQuery(["repoData"], () =>
-    axios
-      .get("https://api.github.com/repos/tannerlinsley/react-query")
-      .then((res) => res.data)
-  )
+  
+  const { isLoading, error, data, isFetching } = useQuery(["users"], () => (
+    api.get('user')
+    .then((res) => res.data)
+  ))
 
   if (isLoading) return <div>Loading...</div>
 
@@ -14,12 +14,7 @@ export const QueryTest = () => {
 
   return (
     <div>
-      <h1>{data.name}</h1>
-      <p>{data.description}</p>
-      <strong>👀 {data.subscribers_count}</strong>{" "}
-      <strong>✨ {data.stargazers_count}</strong>{" "}
-      <strong>🍴 {data.forks_count}</strong>
-      <div>{isFetching ? "Updating..." : ""}</div>
+      123
     </div>
   )
 }

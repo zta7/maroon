@@ -30,7 +30,7 @@ export const LeftDrawer = () => {
   return (
     <div
       className="LeftDrawer group/LeftDrawer col-span-1 row-span-full flex h-full flex-shrink-0 flex-col bg-neutral-100 text-gray-500"
-      style={{ width: 400 }}>
+      style={{ width: 1200 }}>
       <div className="flex h-10 shrink-0 flex-row items-center px-3 hover:bg-neutral-200">
         <div className="mr-2">
           <IconMdiCoffee />
@@ -55,7 +55,7 @@ export const LeftDrawer = () => {
       })}
       <div className="h-8 w-full"></div>
       <div className="grow overflow-y-auto">
-        <QueryTest />
+        {/* <QueryTest /> */}
         <Table />
         {/* {rows2.map((e, i) => {
           return <div key={i}>1</div>
