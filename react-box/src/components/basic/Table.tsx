@@ -99,21 +99,23 @@ export const Table = () => {
 
   const dragRefs = useRef([])
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'fff',
-    item: () => {
-      return { id: 1, index: 0 }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
   useEffect(() => {
-    // dragRefs.current.map(e => {
-    //   drag(e)
-    // })
-  }, [])
+
+
+    dragRefs.current.map(e => {
+      const [{ isDragging }, drag] = useDrag({
+        type: 'fff',
+        item: () => {
+          return { id: e, index: 0 }
+        },
+        collect: (monitor) => ({
+          isDragging: monitor.isDragging(),
+        }),
+      })
+      console.log(e)
+      drag(e)
+    })
+  }, [dragRefs.current])
 
   return (
     <div className="h-full w-full">
@@ -121,17 +123,17 @@ export const Table = () => {
       <div className="flex flex-row">
         {table.getAllLeafColumns().map((column, i) => {
           return (
-            <div key={column.id} ref={ (el) => set(dragRefs.current, [i], el) }>
-              <label>
-                <input
+            <div key={column.id} ref={ (el) => set(dragRefs.current, [i], el) } className="cursor-move">
+              <div>
+                {/* <input
                   {...{
                     type: "checkbox",
                     checked: column.getIsVisible(),
                     onChange: column.getToggleVisibilityHandler(),
                   }}
-                />
+                /> */}
                 {column.id}
-              </label>
+              </div>
             </div>
           )
         })}
