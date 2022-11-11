@@ -3,7 +3,7 @@ import { useDrag, useDrop } from "react-dnd"
 import { getEmptyImage } from "react-dnd-html5-backend"
 
 interface Props {
-  children: JSX.Element,
+  children: React.ReactNode,
   item: Object,
 }
 
