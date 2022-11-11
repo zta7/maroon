@@ -19,12 +19,12 @@ export default defineConfig({
     AutoImport({
       imports: ["react", "react-router-dom"],
       dts: "./src/auto-imports.d.ts",
-      resolvers: [
-        IconsResolver({
-          componentPrefix: "Icon",
-        }),
-      ],
-      dirs: ["src/components/basic"],
+      // resolvers: [
+      //   IconsResolver({
+      //     componentPrefix: "Icon",
+      //   }),
+      // ],
+      // dirs: ["src/components/basic"],
     }),
     Icons({
       compiler: "jsx",

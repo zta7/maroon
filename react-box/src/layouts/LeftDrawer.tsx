@@ -2,6 +2,8 @@
 //   Tooltip,
 // } from "../components/basic/Tooltip"
 
+import { Icon } from "src/components/basic/Icon"
+import { Item, List } from "src/components/basic/List"
 import { Table } from "../components/basic/Table"
 import { QueryTest } from "../components/temp/QueryTest"
 
@@ -9,7 +11,7 @@ export const LeftDrawer = () => {
   const rows1 = [
     {
       title: "Search",
-      icon: <IconMdiSearch />,
+      icon: 'mdi-search',
       tooltip: {
         title: "Search and jump quickly to a page",
         shortcut: "cmd+P",
@@ -17,56 +19,78 @@ export const LeftDrawer = () => {
     },
     {
       title: "Updates",
-      icon: <IconMdiUpdate />,
+      icon: 'mdi-update',
       tooltip: {
         title: "Update All pages in this workspace",
         shortcut: "cmd+O+P",
       },
     },
-    { title: "Settings & Members", icon: <IconMdiCog /> },
+    { title: "Settings & Members", icon: 'mdi-cog' },
   ]
   // const rows2 = Array.from({ length: 100 })
 
   return (
-    <div
-      className="LeftDrawer group/LeftDrawer col-span-1 row-span-full flex h-full flex-shrink-0 flex-col bg-neutral-100 text-gray-500"
-      style={{ width: 1200 }}>
-      <div className="flex h-10 shrink-0 flex-row items-center px-3 hover:bg-neutral-200">
-        <div className="mr-2">
-          <IconMdiCoffee />
-        </div>
+    <List
+      className="group/LeftDrawer h-full flex-shrink-0"
+      style={{ width: 400 }}>
+      <Item className="h-10 shrink-0">
+        <Icon name="mdi-coffee" className="mr-2"/>
         <div className="flex grow flex-row items-center">
           <span className="mr-2">Bingo</span>
-          <IconMdiMore />
+          <Icon name="mdi-more"/>
         </div>
-        <div className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex">
-          <IconMdiChevronDoubleLeft />
-        </div>
-      </div>
+        <Icon name='mdi-chevron-double-left' className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex"/>
+      </Item>
       {rows1.map(({ title, icon, tooltip }, i) => {
         return (
-          <div
-            className="group/item relative mx-1 flex flex-row items-center rounded px-2 py-1 hover:bg-neutral-200"
+          <Item
+            rounded
             key={title}>
-            <div className="mr-2">{icon}</div>
+            <Icon className="mr-2" name={icon} />
             <span className="text-sm">{title}</span>
-          </div>
+          </Item>
         )
       })}
-      <div className="h-8 w-full"></div>
-      <div className="grow overflow-y-auto">
-        {/* <QueryTest /> */}
-        <Table />
-        {/* {rows2.map((e, i) => {
-          return <div key={i}>1</div>
-        })} */}
+      <div className="h-6 w-full"></div>
+      <div className="grow relative overflow-auto">
+          {
+            Array.from({length: 100}).map((e, i) => {
+              return (
+                <div key={i}>Tree</div>
+              )
+            })
+          }
+
+          <Item>
+            <Icon name="mdi-plus" className="mr-2"></Icon>
+            <span className="text-sm">Add a page</span>
+          </Item>
+
+          <div className="h-6 w-full"></div>
+          <Item rounded>
+            <Icon name="mdi-language-html5" className="mr-2"></Icon>
+            <span className="text-sm">Templates</span>
+          </Item>
+          <Item rounded>
+            <Icon name="mdi-download" className="mr-2"></Icon>
+            <span className="text-sm">Import</span>
+          </Item>
+          <Item rounded>
+            <Icon name="mdi-delete-empty" className="mr-2"></Icon>
+            <span className="text-sm">Trash</span>
+          </Item>
+          <div className="h-6 w-full"></div>
+          
+          {/* <QueryTest /> */}
+          {/* <Table /> */}
+          {/* {rows2.map((e, i) => {
+            return <div key={i}>1</div>
+          })} */}
       </div>
-      <div className="flex h-10 shrink-0 flex-row items-center border-t px-3 hover:bg-neutral-200">
-        <div className="mr-2 text-lg">
-          <IconMdiPlus />
-        </div>
+      <Item className="h-10 shrink-0 border-t">
+        <Icon name='mdi-plus' className="mr-2 text-lg"/>
         <span className="text-sm">New page</span>
-      </div>
-    </div>
+      </Item>
+    </List>
   )
 }

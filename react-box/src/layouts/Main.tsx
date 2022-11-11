@@ -47,13 +47,13 @@ export const Main = () => {
           <div className="flex w-full grow flex-col">
             <div className="notion-control mt-24 flex  grow opacity-0 group-hover:opacity-100">
               <div className="c1">
-                <ControlBottom Img={<IconMdiMore />} text={"Add icon"} />
+                {/* <ControlBottom Img={<IconMdiMore />} text={"Add icon"} /> */}
               </div>
               <div className="c2">
-                <ControlBottom Img={<IconMdiCoffee />} text={"Add cover"} />
+                {/* <ControlBottom Img={<IconMdiCoffee />} text={"Add cover"} /> */}
               </div>
               <div className="c3">
-                <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+                {/* <ControlBottom Img={<IconMdiCog />} text={"Add commit"} /> */}
               </div>
             </div>
             <div className="flex grow flex-row">
@@ -111,17 +111,17 @@ const MainPage = ({ onClick }: { onClick: any }) => {
       <div>
         <div>
           <div>
+            {/* <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
             <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
             <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} /> */}
           </div>
           <div>
             <div className="p-1.5 pt-6 pr-2 pl-1.5">DATABASE</div>
+            {/* <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
             <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
             <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
-            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} />
+            <ControlBottom Img={<IconMdiCog />} text={"Add commit"} /> */}
           </div>
         </div>
       </div>

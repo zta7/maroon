@@ -81,7 +81,7 @@ export const Table = () => {
       <div className="flex flex-row">
         {table.getAllLeafColumns().map((column, i) => {
           return (
-            <Drag key={column.id}>
+            <div key={column.id}>
               <div>
                 <input
                   {...{
@@ -92,7 +92,7 @@ export const Table = () => {
                 />
                 {column.id}
               </div>
-            </Drag>
+            </div>
           )
         })}
       </div>
