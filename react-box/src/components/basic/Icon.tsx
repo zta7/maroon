@@ -1,13 +1,17 @@
-import { Icon as Iconify } from '@iconify/react';
+import { Icon as Iconify } from "@iconify/react"
 
 interface Props {
-  className?: string,
+  className?: string
   name?: string
 }
-export const Icon = ({ className='', name='' } : Props) => {
+export const Icon = <T extends React.HTMLProps<Element> & Props>({
+  className = "",
+  name = "",
+  onClick,
+}: T) => {
   return (
-    <div className={ className }>
-      <Iconify icon={name}/>
+    <div className={className} onClick={onClick}>
+      <Iconify icon={name} />
     </div>
   )
 }

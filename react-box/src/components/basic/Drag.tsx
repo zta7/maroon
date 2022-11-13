@@ -3,13 +3,13 @@ import { useDrag, useDrop } from "react-dnd"
 import { getEmptyImage } from "react-dnd-html5-backend"
 
 interface Props {
-  children: React.ReactNode,
-  item: Object,
+  children: React.ReactNode
+  item: Object
 }
 
 export const Drag = ({ children, item }: Props) => {
   const [, dropRef] = useDrop({
-    accept: 'column',
+    accept: "column",
     drop: (targetItem) => {
       console.log(targetItem, item)
     },

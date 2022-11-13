@@ -1,7 +1,12 @@
-export const RightDrawer = () => {
+export const RightDrawer = <T extends React.HTMLProps<Element>>({
+  className,
+  style,
+}: T) => {
   return (
-    <div className="RightDrawer h-full w-full">
-      <div className="mt-10">123</div>
+    <div className={className} style={style}>
+      {Array.from({ length: 100 }).map((e, i) => {
+        return <div key={i}>tree</div>
+      })}
     </div>
   )
 }

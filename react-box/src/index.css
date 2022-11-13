@@ -40,6 +40,39 @@ body {
   opacity: 1;
 }
 
+.layout {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  /* overflow: hidden; */
+  grid-gap: 2px;
+  grid-template-columns: max-content auto max-content;
+  grid-template-rows: 40px auto auto;
+
+}
+.main {
+  grid-area: main;
+  min-height: 0;
+  min-width: 0;
+}
+
+.header {
+  grid-area: header;
+  min-height: 0;
+  min-width: 0;
+}
+
+.left-side {
+  grid-area: left-side;
+  min-height: 0;
+}
+
+.right-side {
+  grid-area: right-side;
+  min-height: 0;
+}
+
+
 @media (hover: hover) {
   .resizer {
     opacity: 0;
