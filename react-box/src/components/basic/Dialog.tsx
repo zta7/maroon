@@ -10,33 +10,26 @@ import {
   FloatingOverlay,
   FloatingFocusManager,
 } from "@floating-ui/react-dom-interactions"
-import { mergeRefs } from "react-merge-refs"
+import { Card } from "./Card"
 
 interface Props {
-  open?: boolean
-  render: (props: {
-    close: () => void
-    labelId: string
-    descriptionId: string
-  }) => React.ReactNode
+  open: boolean
+  onOpenChange: (v: boolean) => void,
   children: JSX.Element
 }
 
 export const Dialog = ({
-  render,
-  open: passedOpen = false,
+  open,
+  onOpenChange,
   children,
+  // onClose
 }: Props) => {
-  const [open, setOpen] = useState(passedOpen)
-
   const { reference, floating, context } = useFloating({
     open,
-    onOpenChange: setOpen,
+    onOpenChange
   })
 
   const id = useId()
-  const labelId = `${id}-label`
-  const descriptionId = `${id}-description`
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useClick(context),
@@ -44,36 +37,21 @@ export const Dialog = ({
     useDismiss(context),
   ])
 
-  // Preserve the consumer's ref
-  const ref = useMemo(
-    () => mergeRefs([reference, (children as any).ref]),
-    [reference, children]
-  )
 
   return (
     <>
-      {cloneElement(children, getReferenceProps({ ref, ...children.props }))}
       <FloatingPortal>
         {open && (
           <FloatingOverlay
-            lockScroll
-            style={{
-              display: "grid",
-              placeItems: "center",
-              background: "rgba(25, 25, 25, 0.8)",
-            }}>
+            className="bg-white/30 grid place-items-center"
+            lockScroll>
             <FloatingFocusManager context={context}>
               <div
                 ref={floating}
-                className="Dialog"
-                aria-labelledby={labelId}
-                aria-describedby={descriptionId}
                 {...getFloatingProps()}>
-                {render({
-                  close: () => setOpen(false),
-                  labelId,
-                  descriptionId,
-                })}
+                {
+                  children
+                }
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>

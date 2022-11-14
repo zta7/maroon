@@ -1,4 +1,3 @@
-import * as React from "react"
 import { mergeRefs } from "react-merge-refs"
 import {
   useFloating,
@@ -14,102 +13,62 @@ import {
   FloatingPortal,
 } from "@floating-ui/react-dom-interactions"
 import type { Placement } from "@floating-ui/react-dom-interactions"
+import { cloneElement } from "react"
 
-export function useTooltipState({
-  initialOpen = false,
-  placement = "top",
-}: {
-  initialOpen?: boolean
-  placement?: Placement
-} = {}) {
-  const [open, setOpen] = React.useState(initialOpen)
-
-  const data = useFloating({
-    placement,
-    open,
-    onOpenChange: setOpen,
-    whileElementsMounted: autoUpdate,
-    middleware: [offset(5), flip(), shift()],
-  })
-
-  const context = data.context
-
-  const hover = useHover(context, { move: false })
-  const focus = useFocus(context)
-  const dismiss = useDismiss(context)
-  const role = useRole(context, { role: "tooltip" })
-
-  const interactions = useInteractions([hover, focus, dismiss, role])
-
-  return React.useMemo(
-    () => ({
-      open,
-      setOpen,
-      ...interactions,
-      ...data,
-    }),
-    [open, setOpen, interactions, data]
-  )
+interface Props {
+  children: React.ReactElement 
 }
 
-type TooltipState = ReturnType<typeof useTooltipState>
+export const Tooltip = ({children}: Props) => {
+  const [open, setOpen] = useState(false);
 
-export const TooltipAnchor = React.forwardRef<
-  HTMLElement,
-  React.HTMLProps<HTMLElement> & {
-    state: TooltipState
-    asChild?: boolean
-  }
->(function TooltipAnchor(
-  { children, state, asChild = false, ...props },
-  propRef
-) {
-  const childrenRef = (children as any).ref
-  const ref = React.useMemo(
-    () => mergeRefs([state.reference, propRef, childrenRef]),
-    [state.reference, propRef, childrenRef]
-  )
+  const { x, y, reference, floating, strategy, context } = useFloating({
+    open,
+    onOpenChange: setOpen,
+    placement: "top",
+    // Make sure the tooltip stays on the screen
+    whileElementsMounted: autoUpdate,
+    middleware: [offset(5), flip(), shift()]
+  });
 
-  // `asChild` allows the user to pass any element as the anchor
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(
-      children,
-      state.getReferenceProps({ ref, ...props, ...children.props })
-    )
-  }
+  const hover = useHover(context, { move: false });
+  const focus = useFocus(context);
+  const dismiss = useDismiss(context);
+  const role = useRole(context, { role: "tooltip" });
 
-  return (
-    <button ref={ref} {...state.getReferenceProps(props)}>
-      {children}
-    </button>
-  )
-})
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    hover,
+    focus,
+    dismiss,
+    role
+  ]);
 
-export const Tooltip = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLProps<HTMLDivElement> & { state: TooltipState }
->(function Tooltip({ state, ...props }, propRef) {
-  const ref = React.useMemo(
-    () => mergeRefs([state.floating, propRef]),
-    [state.floating, propRef]
-  )
+  const ReferenceComponent = cloneElement(children, {
+    ref: reference,
+    ...children.props,
+    ...getReferenceProps() 
+  })
 
   return (
-    <FloatingPortal>
-      {state.open && (
-        <div
-          className="rounded bg-black px-2 py-1 text-xs text-white"
-          ref={ref}
-          style={{
-            position: state.strategy,
-            top: state.y ?? 0,
-            left: state.x ?? 0,
-            visibility: state.x == null ? "hidden" : "visible",
-            // ...props.style,
-          }}
-          {...state.getFloatingProps(props)}
-        />
-      )}
-    </FloatingPortal>
-  )
-})
+    <div>
+      {/* <ReferenceComponent /> */}
+      <FloatingPortal>
+        {open && (
+          <div
+            className="Tooltip"
+            ref={floating}
+            style={{
+              // Positioning styles
+              position: strategy,
+              top: y ?? 0,
+              left: x ?? 0
+            }}
+            {...getFloatingProps()}
+          >
+            I'm a tooltip!
+          </div>
+        )}
+      </FloatingPortal>
+    </div>
+  );
+}

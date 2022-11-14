@@ -1,6 +1,10 @@
 import { Dispatch, SetStateAction } from "react"
+import { Card, CardSection } from "src/components/basic/Card"
+import { Dialog } from "src/components/basic/Dialog"
 import { Icon } from "src/components/basic/Icon"
 import { Item, List } from "src/components/basic/List"
+import { Popover } from "src/components/basic/Popover"
+import { Tooltip } from "src/components/basic/Tooltip"
 // import { Table } from "../components/basic/Table"
 // import { QueryTest } from "../components/temp/QueryTest"
 
@@ -9,6 +13,10 @@ interface Props {
 }
 
 export const LeftDrawer = ({ setLeft }: Props) => {
+
+  const [SearchDialogOpen, SetSearchDialogOpen] = useState(false)
+  const [UpdatePopoverOpen, SetUpdatePopoverOpen] = useState(false)
+
   const rows1 = [
     {
       title: "Search",
@@ -17,6 +25,7 @@ export const LeftDrawer = ({ setLeft }: Props) => {
         title: "Search and jump quickly to a page",
         shortcut: "cmd+P",
       },
+      onClick: () => SetSearchDialogOpen(!SearchDialogOpen)
     },
     {
       title: "Updates",
@@ -25,6 +34,7 @@ export const LeftDrawer = ({ setLeft }: Props) => {
         title: "Update All pages in this workspace",
         shortcut: "cmd+O+P",
       },
+      onClick: () => SetUpdatePopoverOpen(!SearchDialogOpen)
     },
     { title: "Settings & Members", icon: "mdi-cog" },
   ]
@@ -32,6 +42,26 @@ export const LeftDrawer = ({ setLeft }: Props) => {
 
   return (
     <List className="group/LeftDrawer h-full w-full">
+      <Popover open={UpdatePopoverOpen} onOpenChange={(v) => SetUpdatePopoverOpen(v)} placement='right'>
+        <Card>
+          <CardSection>
+            123
+          </CardSection>
+          <CardSection>
+            123
+          </CardSection>
+        </Card>
+      </Popover>
+      <Dialog open={SearchDialogOpen} onOpenChange={(v) => SetSearchDialogOpen(v)}>
+        <Card>
+          <CardSection>
+            123
+          </CardSection>
+          <CardSection>
+            123
+          </CardSection>
+        </Card>
+      </Dialog>
       <Item className="h-10 shrink-0">
         <Icon name="mdi-coffee" className="mr-2" />
         <div className="flex grow flex-row items-center">
@@ -44,9 +74,9 @@ export const LeftDrawer = ({ setLeft }: Props) => {
           className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex"
         />
       </Item>
-      {rows1.map(({ title, icon, tooltip }, i) => {
+      {rows1.map(({ title, icon, tooltip, onClick }, i) => {
         return (
-          <Item rounded key={title}>
+          <Item rounded key={title} onClick={onClick}>
             <Icon className="mr-2" name={icon} />
             <span className="text-sm">{title}</span>
           </Item>

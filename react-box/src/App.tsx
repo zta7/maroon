@@ -87,7 +87,7 @@ const App = () => {
         right={right}
         setRight={setRight}
       />
-      <Main className="main overflow-auto" />
+      <Main className="main overflow-auto relative" />
       {right && (
         <div className="right-side relative" style={{ width: rightSideWidth }}>
           <div
