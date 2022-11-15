@@ -6,6 +6,7 @@ import { RightDrawer } from "./layouts/RightDrawer"
 // import { useWindowSize } from "react-use"
 import { HeaderRight } from "./layouts/HeaderRight"
 import { Main } from "./layouts/Main"
+import { useCallback, useState } from "react"
 
 const App = () => {
   // const { width, height } = useWindowSize()
@@ -31,7 +32,6 @@ const App = () => {
   const rightSideBind = useDrag(
     ({ delta: [mx] }) => {
       let v = rightSideWidth - mx
-      console.log(v)
       if (v < rightSideWidthMin) v = rightSideWidthMin
       else if (v > rightSideWidthMax) v = rightSideWidthMax
       setRightSideWidth(v)
@@ -79,9 +79,9 @@ const App = () => {
         className="header group/Header flex flex-row items-center self-center justify-self-start px-4"
       />
       <HeaderRight
-        className={`z-10 flex h-10 flex-row items-center justify-between ${
+        className={`flex h-10 flex-row items-center justify-between ${
           right
-            ? "right-side w-full self-start justify-self-end"
+            ? "right-side w-full self-start justify-self-end z-10"
             : "header justify-self-end"
         }`}
         right={right}

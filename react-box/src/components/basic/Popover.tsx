@@ -8,16 +8,22 @@ import {
   Placement,
   autoUpdate,
   FloatingPortal,
+  offset,
+  shift,
+  size,
+  flip,
+  FloatingOverlay,
 } from "@floating-ui/react-dom-interactions"
-import { cloneElement, isValidElement, ReactNode } from "react"
+import { cloneElement, forwardRef, isValidElement, ReactNode, useMemo, useState } from "react"
 import { mergeRefs } from "react-merge-refs"
+import { animated, useTransition } from "react-spring"
 
 interface usePopoverStateProps {
-  placement?: Placement
+  placement: Placement
 }
 
 export const usePopoverState = ({
-  placement = "top",
+  placement
 }: usePopoverStateProps) => {
   const [open, setOpen] = useState(false)
   const data = useFloating({
@@ -25,6 +31,9 @@ export const usePopoverState = ({
     open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
+    middleware: [
+      shift({crossAxis: true}), 
+      flip()]
   })
   const context = data.context
 
@@ -49,66 +58,86 @@ type PopoverState = ReturnType<typeof usePopoverState>
 
 interface PopoverAnchorProps {
   state: PopoverState
-  children: ReactNode
+  children: ReactNode,
+  asChild?: boolean
 }
 
-export const PopoverAnchor = ({
+export const PopoverAnchor = forwardRef<HTMLElement, PopoverAnchorProps>(({
   children,
   state,
+  asChild = false,
   ...props
-}: PopoverAnchorProps) => {
+}, propRef) => {
   const childrenRef = (children as any).ref
   const ref = useMemo(
-    () => mergeRefs([state.reference, childrenRef]),
-    [state.reference, childrenRef]
+    () => mergeRefs([state.reference, propRef, childrenRef]),
+    [state.reference, propRef, childrenRef]
   )
 
   // `asChild` allows the user to pass any element as the anchor
-  if (isValidElement(children)) {
+  if (asChild && isValidElement(children)) {
     return cloneElement(
       children,
       state.getReferenceProps({ ref, ...props, ...children.props })
     )
   }
 
-  return <></>
+  return (
+    <button ref={ref} {...state.getReferenceProps(props)}>
+      {children}
+    </button>
+  )
 }
+)
 
-interface Props {
-  state: PopoverState
-  children: JSX.Element
-}
+export const Popover = forwardRef<
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement> & { state: PopoverState }
+>(({ state, ...props }, propRef) => {
+  const ref = useMemo(
+    () => mergeRefs([state.floating, propRef]),
+    [state.floating, propRef]
+  )
 
-export const Popover = ({ children, state }: Props) => {
-  const { context, getFloatingProps, floating, open } = state
+  const transitions = useTransition(state.open, {
+    from:{ opacity: 0 },
+    enter:{ opacity: 1 },
+    leave:{ opacity: 0 },
+  })
 
   return (
     <>
-      {open && (
-        <FloatingPortal>
-          <FloatingFocusManager
-            context={context}
-            modal={false}
-            order={["reference", "content"]}
-            returnFocus={false}>
-            <div
-              style={{
-                position: state.strategy,
-                top: state.y ?? 0,
-                left: state.x ?? 0,
-              }}
-              ref={floating}
-              // style={{
-              //   position: strategy,
-              //   top: y ?? 0,
-              //   left: x ?? 0,
-              // }}
-              {...getFloatingProps()}>
-              {children}
-            </div>
-          </FloatingFocusManager>
-        </FloatingPortal>
-      )}
+      <FloatingPortal>
+        {
+          transitions(
+            (styles, bool) => {
+              return bool && 
+                    <FloatingOverlay 
+                        lockScroll>
+                      <FloatingFocusManager
+                        context={state.context}
+                        modal={false}
+                        order={["reference", "content"]}
+                        returnFocus={false}>
+                        <animated.div style={styles}>
+                        <div
+                          style={{
+                            position: 'fixed',
+                            top: state.y ?? 0,
+                            left: state.x ?? 0,
+                          }}
+                          ref={ref}
+                          {...state.getFloatingProps(props)}>
+                        </div>
+                        </animated.div>
+                      </FloatingFocusManager>
+                      
+                    </FloatingOverlay>
+               
+            }
+          )
+        }
+      </FloatingPortal>
     </>
   )
-}
+})

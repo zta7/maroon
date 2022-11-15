@@ -16,16 +16,16 @@ export default defineConfig({
   },
   plugins: [
     React(),
-    AutoImport({
-      imports: ["react", "react-router-dom"],
-      dts: "./src/auto-imports.d.ts",
-      // resolvers: [
-      //   IconsResolver({
-      //     componentPrefix: "Icon",
-      //   }),
-      // ],
-      // dirs: ["src/components/basic"],
-    }),
+    // AutoImport({
+    //   // imports: ["react", "react-router-dom"],
+    //   // dts: "./src/auto-imports.d.ts",
+    //   // resolvers: [
+    //   //   IconsResolver({
+    //   //     componentPrefix: "Icon",
+    //   //   }),
+    //   // ],
+    //   // dirs: ["src/components/basic"],
+    // }),
     Icons({
       compiler: "jsx",
       jsx: "react",

@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react"
 import { Icon } from "src/components/basic/Icon"
 import { Item, List } from "src/components/basic/List"
-import { SearchItem } from "src/components/leftDrawer/searchItem"
-import { UpdateItem } from "src/components/leftDrawer/updateItem"
+import { SearchItem } from "src/components/leftDrawer/SearchItem"
+import { SettingsItem } from "src/components/leftDrawer/SettingsItem"
+import { UpdateItem } from "src/components/leftDrawer/UpdateItem"
 // import { Table } from "../components/basic/Table"
 // import { QueryTest } from "../components/temp/QueryTest"
 
@@ -11,29 +12,6 @@ interface Props {
 }
 
 export const LeftDrawer = ({ setLeft }: Props) => {
-  // const rows1 = [
-  //   {
-  //     title: "Search",
-  //     icon: "mdi-search",
-  //     tooltip: {
-  //       title: "Search and jump quickly to a page",
-  //       shortcut: "cmd+P",
-  //     },
-  //     // onClick: () => SetSearchDialogOpen(!SearchDialogOpen)
-  //   },
-  //   {
-  //     title: "Updates",
-  //     icon: "mdi-update",
-  //     tooltip: {
-  //       title: "Update All pages in this workspace",
-  //       shortcut: "cmd+O+P",
-  //     },
-  //     // onClick: () => SetUpdatePopoverOpen(!SearchDialogOpen)
-  //   },
-  //   { title: "Settings & Members", icon: "mdi-cog" },
-  // ]
-  // const rows2 = Array.from({ length: 100 })
-
   return (
     <List className="group/LeftDrawer h-full w-full">
       <Item className="h-10 shrink-0">
@@ -50,6 +28,7 @@ export const LeftDrawer = ({ setLeft }: Props) => {
       </Item>
       <SearchItem />
       <UpdateItem />
+      <SettingsItem />
       {/* {rows1.map(({ title, icon, tooltip }, i) => {
         return (
           <Item rounded key={title}>

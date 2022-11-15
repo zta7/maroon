@@ -1,25 +1,24 @@
-import * as React from "react"
 import { mergeRefs } from "react-merge-refs"
 import {
   useFloating,
   autoUpdate,
   offset,
-  flip,
   shift,
   useHover,
-  useFocus,
-  useDismiss,
   useRole,
   useInteractions,
   FloatingPortal,
 } from "@floating-ui/react-dom-interactions"
 import type { Placement } from "@floating-ui/react-dom-interactions"
+import { cloneElement, forwardRef, isValidElement, useEffect, useMemo } from "react"
+import React from "react"
 
 interface useTooltipStateProps {
-  placement?: Placement
+  placement: Placement,
+  disabled?: Boolean
 }
 
-export function useTooltipState({ placement = "top" }: useTooltipStateProps) {
+export function useTooltipState({ placement,disabled = false }: useTooltipStateProps) {
   const [open, setOpen] = React.useState(false)
 
   const data = useFloating({
@@ -27,19 +26,21 @@ export function useTooltipState({ placement = "top" }: useTooltipStateProps) {
     open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
-    middleware: [offset(5), flip(), shift()],
+    middleware: [offset(8),shift({crossAxis: true})],
   })
 
   const context = data.context
 
   const interactions = useInteractions([
-    useHover(context, { move: false }),
-    useFocus(context),
-    useDismiss(context),
+    useHover(context, { delay: { open: 200 }, enabled: !disabled  }),
     useRole(context, { role: "tooltip" }),
   ])
 
-  return React.useMemo(
+  useEffect(() => {
+    if(disabled) setOpen(false)
+  }, [disabled])
+
+  return useMemo(
     () => ({
       open,
       setOpen,
@@ -52,7 +53,7 @@ export function useTooltipState({ placement = "top" }: useTooltipStateProps) {
 
 type TooltipState = ReturnType<typeof useTooltipState>
 
-export const TooltipAnchor = React.forwardRef<
+export const TooltipAnchor = forwardRef<
   HTMLElement,
   React.HTMLProps<HTMLElement> & {
     state: TooltipState
@@ -63,15 +64,13 @@ export const TooltipAnchor = React.forwardRef<
   propRef
 ) {
   const childrenRef = (children as any).ref
-  const ref = React.useMemo(
+  const ref = useMemo(
     () => mergeRefs([state.reference, propRef, childrenRef]),
     [state.reference, propRef, childrenRef]
   )
-
   // `asChild` allows the user to pass any element as the anchor
-  if (asChild && React.isValidElement(children)) {
-    console.log(1)
-    return React.cloneElement(
+  if (asChild && isValidElement(children)) {
+    return cloneElement(
       children,
       state.getReferenceProps({ ref, ...props, ...children.props })
     )
@@ -84,23 +83,22 @@ export const TooltipAnchor = React.forwardRef<
   )
 })
 
-export const Tooltip = React.forwardRef<
+export const Tooltip = forwardRef<
   HTMLDivElement,
   React.HTMLProps<HTMLDivElement> & { state: TooltipState }
 >(function Tooltip({ state, ...props }, propRef) {
-  const ref = React.useMemo(
+  const ref = useMemo(
     () => mergeRefs([state.floating, propRef]),
     [state.floating, propRef]
   )
-
   return (
     <FloatingPortal>
       {state.open && (
         <div
           ref={ref}
-          className="rounded bg-black px-2 py-1 text-xs text-white"
+          className="rounded bg-black px-2 py-1 text-xs text-white whitespace-nowrap"
           style={{
-            position: state.strategy,
+            position: 'fixed',
             top: state.y ?? 0,
             left: state.x ?? 0,
             visibility: state.x == null ? "hidden" : "visible",

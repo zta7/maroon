@@ -44,7 +44,7 @@ body {
   display: grid;
   width: 100vw;
   height: 100vh;
-  /* overflow: hidden; */
+  overflow: hidden;
   grid-gap: 2px;
   grid-template-columns: max-content auto max-content;
   grid-template-rows: 40px auto auto;

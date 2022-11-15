@@ -7,7 +7,7 @@ export const Main = <T extends React.HTMLProps<Element>>({ className }: T) => {
         123
       </div> */}
       <div className="absolute top-0 bottom-0 left-0 right-0">
-        <Table />
+        {/* <Table /> */}
       </div>
     </div>
   )

@@ -8,6 +8,7 @@ import {
 import { useQuery } from "@tanstack/react-query"
 import { api } from "src/boot/axios"
 import { Drag } from "./Drag"
+import { useMemo } from "react"
 
 export const Table = () => {
   const columns = useMemo(

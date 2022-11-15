@@ -1,30 +1,26 @@
-interface ListProps {
-  tag?: keyof JSX.IntrinsicElements
-}
+import { forwardRef } from "react"
 
-export const List = <T extends React.HTMLProps<Element> & ListProps>({
+
+
+export const List = <T extends React.HTMLProps<Element>>({
   className = "",
   style,
   children,
-  tag: Tag = "div",
 }: T) => {
   const _className = "relative flex flex-col flex-nowrap bg-neutral-100" + " "
   className = _className + className
   return (
-    <Tag className={className} style={style}>
+    <div className={className} style={style}>
       {children}
-    </Tag>
+    </div>
   )
 }
 
-interface ItemProps extends React.HTMLProps<Element> {
-  // tag?: keyof JSX.IntrinsicElements
-  // rounded?: Boolean
-}
-
-export const Item = forwardRef<HTMLElement, ItemProps>(
+export const Item = forwardRef<HTMLDivElement, React.HTMLProps<HTMLElement> & {
+  rounded?: Boolean
+}>(
   (
-    { className = "", children, tag: Tag = "div", rounded = false, onClick },
+    { className = "", children, rounded = false, onClick },
     ref
   ) => {
     let _className =
@@ -36,10 +32,11 @@ export const Item = forwardRef<HTMLElement, ItemProps>(
 
     className = _className + className
 
+
     return (
-      <Tag className={className} onClick={onClick} ref={ref}>
+      <div className={className} onClick={onClick} ref={ref}>
         {children}
-      </Tag>
+      </div>
     )
   }
 )
