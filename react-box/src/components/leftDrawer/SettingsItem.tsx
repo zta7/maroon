@@ -3,7 +3,7 @@ import { Dialog, DialogAnchor, useDialogState } from "../basic/Dialog"
 import { Icon } from "../basic/Icon"
 import { Item } from "../basic/List"
 
-export const SettingsItem = () => {  
+export const SettingsItem = () => {
   const dialog = useDialogState({ placement: "top" })
   const ref = useRef(null)
   return (

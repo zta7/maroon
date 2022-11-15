@@ -1,4 +1,4 @@
-import { Table } from "../components/basic/Table"
+// import { Table } from "../components/basic/Table"
 
 export const Main = <T extends React.HTMLProps<Element>>({ className }: T) => {
   return (

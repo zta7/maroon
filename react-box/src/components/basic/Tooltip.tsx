@@ -10,15 +10,23 @@ import {
   FloatingPortal,
 } from "@floating-ui/react-dom-interactions"
 import type { Placement } from "@floating-ui/react-dom-interactions"
-import { cloneElement, forwardRef, isValidElement, useEffect, useMemo } from "react"
-import React from "react"
+import React, {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useEffect,
+  useMemo,
+} from "react"
 
 interface useTooltipStateProps {
-  placement: Placement,
+  placement: Placement
   disabled?: Boolean
 }
 
-export function useTooltipState({ placement,disabled = false }: useTooltipStateProps) {
+export function useTooltipState({
+  placement,
+  disabled = false,
+}: useTooltipStateProps) {
   const [open, setOpen] = React.useState(false)
 
   const data = useFloating({
@@ -26,18 +34,18 @@ export function useTooltipState({ placement,disabled = false }: useTooltipStateP
     open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
-    middleware: [offset(8),shift({crossAxis: true})],
+    middleware: [offset(8), shift({ crossAxis: true })],
   })
 
   const context = data.context
 
   const interactions = useInteractions([
-    useHover(context, { delay: { open: 200 }, enabled: !disabled  }),
+    useHover(context, { delay: { open: 200 }, enabled: !disabled }),
     useRole(context, { role: "tooltip" }),
   ])
 
   useEffect(() => {
-    if(disabled) setOpen(false)
+    if (disabled) setOpen(false)
   }, [disabled])
 
   return useMemo(
@@ -96,9 +104,9 @@ export const Tooltip = forwardRef<
       {state.open && (
         <div
           ref={ref}
-          className="rounded bg-black px-2 py-1 text-xs text-white whitespace-nowrap"
+          className="whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white"
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: state.y ?? 0,
             left: state.x ?? 0,
             visibility: state.x == null ? "hidden" : "visible",

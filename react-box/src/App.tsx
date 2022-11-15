@@ -81,13 +81,13 @@ const App = () => {
       <HeaderRight
         className={`flex h-10 flex-row items-center justify-between ${
           right
-            ? "right-side w-full self-start justify-self-end z-10"
+            ? "right-side z-10 w-full self-start justify-self-end"
             : "header justify-self-end"
         }`}
         right={right}
         setRight={setRight}
       />
-      <Main className="main overflow-auto relative" />
+      <Main className="main relative overflow-auto" />
       {right && (
         <div className="right-side relative" style={{ width: rightSideWidth }}>
           <div

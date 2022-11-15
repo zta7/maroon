@@ -4,7 +4,7 @@ import { Icon } from "../basic/Icon"
 import { Item } from "../basic/List"
 import { Tooltip, TooltipAnchor, useTooltipState } from "../basic/Tooltip"
 
-export const SearchItem = () => {  
+export const SearchItem = () => {
   const tooltip = useTooltipState({ placement: "right" })
   const dialog = useDialogState({ placement: "top" })
   const ref = useRef(null)

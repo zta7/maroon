@@ -1,5 +1,12 @@
-import { cloneElement, forwardRef, HTMLProps, isValidElement, useEffect, useMemo, useState } from "react"
-import { useSpring, animated, useTransition } from 'react-spring'
+import {
+  cloneElement,
+  forwardRef,
+  HTMLProps,
+  isValidElement,
+  useMemo,
+  useState,
+} from "react"
+import { animated, useTransition } from "react-spring"
 import {
   useFloating,
   useInteractions,
@@ -76,9 +83,9 @@ export const DialogAnchor = forwardRef<
 })
 
 export const Dialog = forwardRef<
-HTMLDivElement,
-HTMLProps<HTMLDivElement> & { state: DialogState }
->(({ state, ...props }, propRef) => {
+  HTMLDivElement,
+  HTMLProps<HTMLDivElement> & { state: DialogState }
+>(function Dialog({ state, ...props }, propRef) {
   const ref = useMemo(
     () => mergeRefs([state.floating, propRef]),
     [state.floating, propRef]
@@ -89,31 +96,32 @@ HTMLProps<HTMLDivElement> & { state: DialogState }
     enter: { opacity: 1 },
     leave: { opacity: 0 },
   })
-  
+
   return (
     <>
       <FloatingPortal>
-        {
-          transitions(
-            (styles, bool) => {
-              return bool && 
-                <animated.div style={styles}>
-                  <FloatingOverlay
-                    lockScroll
-                    className="bg-indigo-500/30 z-50 flex items-center justify-center">
-                    <FloatingFocusManager context={state.context}>
-                        <div
-                          style={{ maxHeight: '80vh', maxWidth: 'calc(100vw - 24px)'}}
-                          className="overflow-hidden bg-white rounded-lg">
-                            <div ref={ref} {...state.getFloatingProps(props)}>
-                            </div>
-                        </div>
-                    </FloatingFocusManager>
-                  </FloatingOverlay>
-                </animated.div>
-            }
+        {transitions((styles, bool) => {
+          return (
+            bool && (
+              <animated.div style={styles}>
+                <FloatingOverlay
+                  lockScroll
+                  className="z-50 flex items-center justify-center bg-indigo-500/30">
+                  <FloatingFocusManager context={state.context}>
+                    <div
+                      style={{
+                        maxHeight: "80vh",
+                        maxWidth: "calc(100vw - 24px)",
+                      }}
+                      className="overflow-hidden rounded-lg bg-white">
+                      <div ref={ref} {...state.getFloatingProps(props)}></div>
+                    </div>
+                  </FloatingFocusManager>
+                </FloatingOverlay>
+              </animated.div>
+            )
           )
-        }
+        })}
       </FloatingPortal>
     </>
   )

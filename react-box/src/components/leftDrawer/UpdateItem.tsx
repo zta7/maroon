@@ -7,8 +7,10 @@ import { useTooltipState, TooltipAnchor, Tooltip } from "../basic/Tooltip"
 export const UpdateItem = () => {
   const popover = usePopoverState({ placement: "right" })
   const tooltipDisabled = useCallback(() => popover.open, [popover.open])
-  const tooltip = useTooltipState({ placement: "right", disabled: tooltipDisabled() })
-
+  const tooltip = useTooltipState({
+    placement: "right",
+    disabled: tooltipDisabled(),
+  })
 
   return (
     <>
