@@ -6,7 +6,7 @@ import { RightDrawer } from "./layouts/RightDrawer"
 // import { useWindowSize } from "react-use"
 import { HeaderRight } from "./layouts/HeaderRight"
 import { Main } from "./layouts/Main"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   useChain,
   useSpring,
@@ -14,7 +14,7 @@ import {
   useTransition,
   animated,
 } from "react-spring"
-import { useWindowSize } from "react-use"
+import { useUpdateEffect, useWindowSize } from "react-use"
 
 const App = () => {
   const { width: winWidth, height: winHeight } = useWindowSize()
@@ -66,35 +66,73 @@ const App = () => {
   }, [right])
 
   // const springRef = useSpringRef()
-  const styles = useSpring({
+  const [styles, api] = useSpring(
+    () => ({
+      from: {
+        height: "100%",
+        top: 0,
+        left: 0,
+        // bottom: 0,
+      },
+    })
+
+    // // to: [
+    // //   // { position: "absolute", height: "200px" },
+    // //   { background: "white" },
+    // //   // { left: -leftSideWidth },
+    // //   // { opacity: 0, color: "rgb(14,26,19)" },
+    // // ],
     // to: [
-    //   // { position: "absolute", height: "200px" },
-    //   { background: "white" },
-    //   // { left: -leftSideWidth },
-    //   // { opacity: 0, color: "rgb(14,26,19)" },
+    //   {
+    //     height: left ? "100%" : `${winHeight - 150}px`,
+    //     config: {
+    //       duration: 0,
+    //     },
+    //   },
+    //   {
+    //     position: left ? "relative" : "absolute",
+    //     background: left ? "rgba(245,245,245,1)" : "white",
+    //     top: left ? 0 : 75,
+    //   },
+    //   { translateX: left ? 0 : -leftSideWidth },
     // ],
-    to: [
-      {
-        height: left ? "100%" : `${winHeight - 150}px`,
-        config: {
-          duration: 0,
-        },
-      },
-      {
-        position: left ? "relative" : "absolute",
-        background: left ? "rgba(245,245,245,1)" : "white",
-        top: left ? 0 : 75,
-      },
-      { translateX: left ? 0 : -leftSideWidth },
-    ],
-    from: {
-      height: "100%",
-      background: "rgba(245,245,245,1)",
-      position: "relative",
-      // top: 0,
-      // bottom: 0,
-    },
-  })
+  )
+
+  const isFirstRender = useRef(true)
+  const VerticalOffset = 75
+  useUpdateEffect(() => {
+    // if (isFirstRender.current) {
+    //   isFirstRender.current = false
+    //   return
+    // }
+    if (left) {
+      console.log(1)
+      api.start({
+        to: [
+          {
+            height: "100%",
+            top: 0,
+            config: { duration: 0 },
+          },
+          {
+            left: 0,
+            config: { duration: 250 },
+          },
+        ],
+      })
+    } else {
+      api.start({
+        to: [
+          {
+            height: `${winHeight - VerticalOffset * 2}px`,
+            config: { duration: 0 },
+          },
+          { top: VerticalOffset, config: { duration: 500 } },
+          { left: -leftSideWidth, config: { duration: 500 } },
+        ],
+      })
+    }
+  }, [left])
   // const transitionRef = useSpringRef()
   // const transitions = useTransition({ ref: transitionRef })
   // useChain([springRef, transitionRef])
@@ -104,7 +142,11 @@ const App = () => {
       className="layout h-full w-full select-none text-gray-500"
       style={{ ...layoutStyle() }}>
       <animated.div
-        className="left-side relative flex flex-row"
+        className={`left-side flex flex-row ${
+          left
+            ? "relative bg-neutral-100"
+            : "absolute z-20 rounded border-t border-b bg-white shadow-lg"
+        }`}
         style={{ width: leftSideWidth, ...styles }}>
         <LeftDrawer setLeft={setLeft} />
         <div
