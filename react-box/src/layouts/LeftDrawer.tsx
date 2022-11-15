@@ -1,10 +1,8 @@
 import { Dispatch, SetStateAction } from "react"
-import { Card, CardSection } from "src/components/basic/Card"
-import { Dialog } from "src/components/basic/Dialog"
 import { Icon } from "src/components/basic/Icon"
 import { Item, List } from "src/components/basic/List"
-import { Popover } from "src/components/basic/Popover"
-import { Tooltip } from "src/components/basic/Tooltip"
+import { SearchItem } from "src/components/leftDrawer/searchItem"
+import { UpdateItem } from "src/components/leftDrawer/updateItem"
 // import { Table } from "../components/basic/Table"
 // import { QueryTest } from "../components/temp/QueryTest"
 
@@ -13,10 +11,6 @@ interface Props {
 }
 
 export const LeftDrawer = ({ setLeft }: Props) => {
-
-  const [SearchDialogOpen, SetSearchDialogOpen] = useState(false)
-  const [UpdatePopoverOpen, SetUpdatePopoverOpen] = useState(false)
-
   // const rows1 = [
   //   {
   //     title: "Search",
@@ -54,6 +48,8 @@ export const LeftDrawer = ({ setLeft }: Props) => {
           className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex"
         />
       </Item>
+      <SearchItem />
+      <UpdateItem />
       {/* {rows1.map(({ title, icon, tooltip }, i) => {
         return (
           <Item rounded key={title}>

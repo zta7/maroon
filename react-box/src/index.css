@@ -54,6 +54,7 @@ body {
   grid-area: main;
   min-height: 0;
   min-width: 0;
+  position: relative;
 }
 
 .header {

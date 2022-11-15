@@ -1,57 +1,69 @@
-import React, { cloneElement, useMemo, useState } from "react"
+import React, { ReactNode } from "react"
+
 import {
   useFloating,
   useInteractions,
   useClick,
   useRole,
   useDismiss,
-  useId,
   FloatingPortal,
   FloatingOverlay,
   FloatingFocusManager,
+  Placement,
 } from "@floating-ui/react-dom-interactions"
-import { Card } from "./Card"
 
-interface Props {
-  open: boolean
-  onOpenChange: (v: boolean) => void,
-  children: JSX.Element
+interface useDialogStateProps {
+  placement?: Placement
 }
 
-export const Dialog = ({
-  open,
-  onOpenChange,
-  children,
-  // onClose
-}: Props) => {
-  const { reference, floating, context } = useFloating({
+export const useDialogState = ({ placement = "top" }: useDialogStateProps) => {
+  const [open, setOpen] = React.useState(false)
+  const data = useFloating({
+    placement,
     open,
-    onOpenChange
+    onOpenChange: setOpen,
   })
+  const context = data.context
 
-  const id = useId()
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([
+  const interactions = useInteractions([
     useClick(context),
     useRole(context),
     useDismiss(context),
   ])
 
+  return React.useMemo(
+    () => ({
+      open,
+      setOpen,
+      ...interactions,
+      ...data,
+    }),
+    [open, setOpen, interactions, data]
+  )
+}
 
+type DialogState = ReturnType<typeof useDialogState>
+interface dialogProps {
+  state: DialogState
+  children: ReactNode
+}
+
+export const Dialog = ({ state, children }: dialogProps) => {
+  const { context, getFloatingProps, reference, open } = state
   return (
     <>
       <FloatingPortal>
         {open && (
           <FloatingOverlay
-            className="bg-white/30 grid place-items-center"
-            lockScroll>
+            lockScroll
+            style={{
+              display: "grid",
+              placeItems: "center",
+              background: "rgba(25, 25, 25, 0.8)",
+            }}>
             <FloatingFocusManager context={context}>
-              <div
-                ref={floating}
-                {...getFloatingProps()}>
-                {
-                  children
-                }
+              <div ref={reference} {...getFloatingProps()}>
+                {children}
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>
