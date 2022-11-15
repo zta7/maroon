@@ -5,7 +5,7 @@ export const List = <T extends React.HTMLProps<Element>>({
   style,
   children,
 }: T) => {
-  const _className = "relative flex flex-col flex-nowrap bg-neutral-100" + " "
+  const _className = "relative flex flex-col flex-nowrap" + " "
   className = _className + className
   return (
     <div className={className} style={style}>

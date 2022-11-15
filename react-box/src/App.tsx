@@ -6,10 +6,18 @@ import { RightDrawer } from "./layouts/RightDrawer"
 // import { useWindowSize } from "react-use"
 import { HeaderRight } from "./layouts/HeaderRight"
 import { Main } from "./layouts/Main"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import {
+  useChain,
+  useSpring,
+  useSpringRef,
+  useTransition,
+  animated,
+} from "react-spring"
+import { useWindowSize } from "react-use"
 
 const App = () => {
-  // const { width, height } = useWindowSize()
+  const { width: winWidth, height: winHeight } = useWindowSize()
   const [right, setRight] = useState(false)
   const [left, setLeft] = useState(true)
 
@@ -57,22 +65,54 @@ const App = () => {
         }
   }, [right])
 
+  // const springRef = useSpringRef()
+  const styles = useSpring({
+    // to: [
+    //   // { position: "absolute", height: "200px" },
+    //   { background: "white" },
+    //   // { left: -leftSideWidth },
+    //   // { opacity: 0, color: "rgb(14,26,19)" },
+    // ],
+    to: [
+      {
+        height: left ? "100%" : `${winHeight - 150}px`,
+        config: {
+          duration: 0,
+        },
+      },
+      {
+        position: left ? "relative" : "absolute",
+        background: left ? "rgba(245,245,245,1)" : "white",
+        top: left ? 0 : 75,
+      },
+      { translateX: left ? 0 : -leftSideWidth },
+    ],
+    from: {
+      height: "100%",
+      background: "rgba(245,245,245,1)",
+      position: "relative",
+      // top: 0,
+      // bottom: 0,
+    },
+  })
+  // const transitionRef = useSpringRef()
+  // const transitions = useTransition({ ref: transitionRef })
+  // useChain([springRef, transitionRef])
+
   return (
     <div
       className="layout h-full w-full select-none text-gray-500"
       style={{ ...layoutStyle() }}>
-      {left && (
+      <animated.div
+        className="left-side relative flex flex-row"
+        style={{ width: leftSideWidth, ...styles }}>
+        <LeftDrawer setLeft={setLeft} />
         <div
-          className="left-side relative flex flex-row"
-          style={{ width: leftSideWidth }}>
-          <LeftDrawer setLeft={setLeft} />
-          <div
-            className="absolute -right-2 top-0 bottom-0 w-2 cursor-col-resize touch-none"
-            {...leftSideBind()}>
-            <div className="h-full w-px border-l"></div>
-          </div>
+          className="absolute -right-2 top-0 bottom-0 w-2 cursor-col-resize touch-none"
+          {...leftSideBind()}>
+          <div className="h-full w-px border-l"></div>
         </div>
-      )}
+      </animated.div>
       <HeaderLeft
         left={left}
         setLeft={setLeft}
