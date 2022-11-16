@@ -1,4 +1,4 @@
-import { forwardRef } from "react"
+import { Children, forwardRef } from "react"
 
 export const List = <T extends React.HTMLProps<Element>>({
   className = "",
@@ -23,9 +23,11 @@ export const Item = forwardRef<
   let _className =
     "relative flex flex-row flex-nowrap items-center hover:bg-neutral-200 cursor-pointer" +
     " "
-
-  if (rounded) _className += "rounded-md mx-1 px-2 py-1" + " "
-  else _className += "px-3 py-1" + " "
+  const arr = Children.toArray(children)
+  if(arr.length > 0) {
+    if (rounded) _className += "rounded-md mx-1 px-2 py-1" + " "
+    else _className += "px-3 py-1" + " "
+  }
 
   className = _className + className
 

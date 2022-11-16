@@ -1,51 +1,15 @@
 import { HeaderLeft } from "./layouts/HeaderLeft"
 import { LeftDrawer } from "./layouts/LeftDrawer"
 // import { Main } from "./layouts/Main"
-import { useDrag } from "@use-gesture/react"
+import { useDrag, useHover } from "@use-gesture/react"
 import { RightDrawer } from "./layouts/RightDrawer"
 // import { useWindowSize } from "react-use"
 import { HeaderRight } from "./layouts/HeaderRight"
 import { Main } from "./layouts/Main"
-import { useCallback, useEffect, useRef, useState } from "react"
-import {
-  useChain,
-  useSpring,
-  useSpringRef,
-  useTransition,
-  animated,
-} from "react-spring"
-import { useUpdateEffect, useWindowSize } from "react-use"
-
+import { useCallback, useRef, useState } from "react"
+import { useSelector } from "react-redux"
 const App = () => {
-  const { width: winWidth, height: winHeight } = useWindowSize()
-  const [right, setRight] = useState(false)
-  const [left, setLeft] = useState(true)
-
-  const [leftSideWidth, setLeftSideWidth] = useState(200)
-  const leftSideWidthMin = 200
-  const leftSideWidthMax = 480
-  const leftSideBind = useDrag(
-    ({ delta: [mx] }) => {
-      let v = leftSideWidth + mx
-      if (v < leftSideWidthMin) v = leftSideWidthMin
-      if (v > leftSideWidthMax) v = leftSideWidthMax
-      setLeftSideWidth(v)
-    },
-    { axis: "x" }
-  )
-
-  const [rightSideWidth, setRightSideWidth] = useState(400)
-  const rightSideWidthMin = 360
-  const rightSideWidthMax = 520
-  const rightSideBind = useDrag(
-    ({ delta: [mx] }) => {
-      let v = rightSideWidth - mx
-      if (v < rightSideWidthMin) v = rightSideWidthMin
-      else if (v > rightSideWidthMax) v = rightSideWidthMax
-      setRightSideWidth(v)
-    },
-    { axis: "x" }
-  )
+  const {right} = useSelector((state: any) => state.layout)
 
   const layoutStyle = useCallback(() => {
     return right
@@ -65,99 +29,12 @@ const App = () => {
         }
   }, [right])
 
-  // const springRef = useSpringRef()
-  const [styles, api] = useSpring(
-    () => ({
-      from: {
-        height: "100%",
-        top: 0,
-        left: 0,
-        // bottom: 0,
-      },
-    })
-
-    // // to: [
-    // //   // { position: "absolute", height: "200px" },
-    // //   { background: "white" },
-    // //   // { left: -leftSideWidth },
-    // //   // { opacity: 0, color: "rgb(14,26,19)" },
-    // // ],
-    // to: [
-    //   {
-    //     height: left ? "100%" : `${winHeight - 150}px`,
-    //     config: {
-    //       duration: 0,
-    //     },
-    //   },
-    //   {
-    //     position: left ? "relative" : "absolute",
-    //     background: left ? "rgba(245,245,245,1)" : "white",
-    //     top: left ? 0 : 75,
-    //   },
-    //   { translateX: left ? 0 : -leftSideWidth },
-    // ],
-  )
-
-  const isFirstRender = useRef(true)
-  const VerticalOffset = 75
-  useUpdateEffect(() => {
-    // if (isFirstRender.current) {
-    //   isFirstRender.current = false
-    //   return
-    // }
-    if (left) {
-      console.log(1)
-      api.start({
-        to: [
-          {
-            height: "100%",
-            top: 0,
-            config: { duration: 0 },
-          },
-          {
-            left: 0,
-            config: { duration: 250 },
-          },
-        ],
-      })
-    } else {
-      api.start({
-        to: [
-          {
-            height: `${winHeight - VerticalOffset * 2}px`,
-            config: { duration: 0 },
-          },
-          { top: VerticalOffset, config: { duration: 500 } },
-          { left: -leftSideWidth, config: { duration: 500 } },
-        ],
-      })
-    }
-  }, [left])
-  // const transitionRef = useSpringRef()
-  // const transitions = useTransition({ ref: transitionRef })
-  // useChain([springRef, transitionRef])
-
   return (
     <div
       className="layout h-full w-full select-none text-gray-500"
       style={{ ...layoutStyle() }}>
-      <animated.div
-        className={`left-side flex flex-row ${
-          left
-            ? "relative bg-neutral-100"
-            : "absolute z-20 rounded border-t border-b bg-white shadow-lg"
-        }`}
-        style={{ width: leftSideWidth, ...styles }}>
-        <LeftDrawer setLeft={setLeft} />
-        <div
-          className="absolute -right-2 top-0 bottom-0 w-2 cursor-col-resize touch-none"
-          {...leftSideBind()}>
-          <div className="h-full w-px border-l"></div>
-        </div>
-      </animated.div>
+      <LeftDrawer />
       <HeaderLeft
-        left={left}
-        setLeft={setLeft}
         className="header group/Header flex flex-row items-center self-center justify-self-start px-4"
       />
       <HeaderRight
@@ -166,23 +43,11 @@ const App = () => {
             ? "right-side z-10 w-full self-start justify-self-end"
             : "header justify-self-end"
         }`}
-        right={right}
-        setRight={setRight}
       />
       <Main className="main relative overflow-auto" />
-      {right && (
-        <div className="right-side relative" style={{ width: rightSideWidth }}>
-          <div
-            className="absolute top-0 bottom-0 w-2 cursor-col-resize touch-none"
-            {...rightSideBind()}>
-            <div className="h-full w-px border-l"></div>
-          </div>
-          <RightDrawer
-            // ToDo 找到40px的 css变量
-            className="mt-10 h-[calc(100%-40px)] w-full overflow-auto"
-          />
-        </div>
-      )}
+      {right && 
+        <RightDrawer />
+      }
     </div>
   )
 }

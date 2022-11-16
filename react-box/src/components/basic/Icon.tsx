@@ -1,17 +1,23 @@
 import { Icon as Iconify } from "@iconify/react"
+import { forwardRef, HTMLProps } from "react"
 
 interface Props {
   className?: string
   name?: string
 }
-export const Icon = <T extends React.HTMLProps<Element> & Props>({
-  className = "",
-  name = "",
-  onClick,
-}: T) => {
+// <T extends React.HTMLProps<Element> & Props>
+export const Icon = forwardRef<
+  HTMLDivElement,
+  HTMLProps<HTMLDivElement> & Props
+>(
+  function Icon({
+    className = "",
+    name = "",
+    onClick,
+  }, propRef) {
   return (
-    <div className={className} onClick={onClick}>
+    <div className={className} onClick={onClick} ref={propRef}>
       <Iconify icon={name} />
     </div>
   )
-}
+})
