@@ -26,7 +26,6 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
     const leftSideWidthMin = 200
     const leftSideWidthMax = 480
     const { height: winHeight } = useWindowSize()
-    const VerticalOffset = 75
 
     const leftSideDragBind = useDrag(
       (state) => {
@@ -43,54 +42,55 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
       console.log(state)
     })
 
-    const [springStyles, api] = useSpring(() => ({
-      from: {
-        height: "100%",
-        top: 0,
-        left: 0,
-      },
-    }))
+    // const [springStyles, api] = useSpring(() => ({
+    //   from: {
+    //     height: "100%",
+    //     top: 0,
+    //     left: 0,
+    //   },
+    // }))
 
-    const prevLeft = usePrevious(left)
-    useUpdateEffect(() => {
-      if (prevLeft === left) return
-      if (left === LeftStatus.Visible) {
-        api.start({
-          to: [
-            {
-              top: 0,
-              height: "100%",
-              config: { duration: 250 },
-            },
-          ],
-        })
-      } else if (left === LeftStatus.VisibleMini) {
-        api.start({
-          to: [{ left: 0, config: { duration: 250 } }],
-        })
-      } else if (left === LeftStatus.Invisible) {
-        api.start({
-          to: [
-            {
-              height: `${winHeight - VerticalOffset * 2}px`,
-              config: { duration: 0 },
-            },
-            { top: VerticalOffset, config: { duration: 250 } },
-            { left: -leftSideWidth, config: { duration: 250 } },
-          ],
-        })
-      }
-    }, [left])
+    // const prevLeft = usePrevious(left)
+    // useUpdateEffect(() => {
+    //   if (prevLeft === left) return
+    //   if (left === LeftStatus.Visible) {
+    //     api.start({
+    //       to: [
+    //         {
+    //           top: 0,
+    //           height: "100%",
+    //           config: { duration: 250 },
+    //         },
+    //       ],
+    //     })
+    //   } else if (left === LeftStatus.VisibleMini) {
+    //     api.start({
+    //       to: [{ left: 0, config: { duration: 250 } }],
+    //     })
+    //   } else if (left === LeftStatus.Invisible) {
+    //     api.start({
+    //       to: [
+    //         {
+    //           height: `${winHeight - VerticalOffset * 2}px`,
+    //           config: { duration: 0 },
+    //         },
+    //         { top: VerticalOffset, config: { duration: 250 } },
+    //         { left: -leftSideWidth, config: { duration: 250 } },
+    //       ],
+    //     })
+    //   }
+    // }, [left])
+
+    const onToggleLeftClick = () => {
+      dispatch(toggleLeft(LeftStatus.Invisible))
+    }
 
     return (
       <Container
-        className="left-side overflow-visible duration-500"
+        className="left-side"
         style={{ width: left === LeftStatus.Visible ? leftSideWidth : 0 }}>
         <div
-          className={`duration-500`}
-          //  ${
-
-          // }`}
+          className={`relative duration-200`}
           style={{
             width: leftSideWidth,
             height: left === LeftStatus.Visible ? "100%" : "calc(100% - 120px)",
@@ -118,7 +118,7 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
               </div>
               {left === LeftStatus.Visible && (
                 <Icon
-                  onClick={() => dispatch(toggleLeft(LeftStatus.Invisible))}
+                  onClick={() => onToggleLeftClick()}
                   name="mdi-chevron-double-left"
                   className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex"
                 />
