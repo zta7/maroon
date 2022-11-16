@@ -9,12 +9,7 @@ interface Props {
 export const Icon = forwardRef<
   HTMLDivElement,
   HTMLProps<HTMLDivElement> & Props
->(
-  function Icon({
-    className = "",
-    name = "",
-    onClick,
-  }, propRef) {
+>(function Icon({ className = "", name = "", onClick }, propRef) {
   return (
     <div className={className} onClick={onClick} ref={propRef}>
       <Iconify icon={name} />

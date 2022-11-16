@@ -9,7 +9,7 @@ import { Main } from "./layouts/Main"
 import { useCallback, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 const App = () => {
-  const {right} = useSelector((state: any) => state.layout)
+  const { right } = useSelector((state: any) => state.layout)
 
   const layoutStyle = useCallback(() => {
     return right
@@ -34,9 +34,7 @@ const App = () => {
       className="layout h-full w-full select-none text-gray-500"
       style={{ ...layoutStyle() }}>
       <LeftDrawer />
-      <HeaderLeft
-        className="header group/Header flex flex-row items-center self-center justify-self-start px-4"
-      />
+      <HeaderLeft className="header group/Header flex flex-row items-center self-center justify-self-start px-4" />
       <HeaderRight
         className={`flex h-10 flex-row items-center justify-between ${
           right
@@ -45,9 +43,7 @@ const App = () => {
         }`}
       />
       <Main className="main relative overflow-auto" />
-      {right && 
-        <RightDrawer />
-      }
+      {right && <RightDrawer />}
     </div>
   )
 }
