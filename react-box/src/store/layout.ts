@@ -11,6 +11,7 @@ export const layoutSlice = createSlice({
   initialState: {
     left: LeftStatus.Visible,
     right: false,
+    favourite: false,
   },
 
   reducers: {
@@ -20,9 +21,12 @@ export const layoutSlice = createSlice({
     toggleRight: (state) => {
       state.right = !state.right
     },
+    toggleFavourite: (state) => {
+      state.favourite = !state.favourite
+    },
   },
 })
 
-export const { toggleLeft, toggleRight } = layoutSlice.actions
+export const { toggleLeft, toggleRight, toggleFavourite } = layoutSlice.actions
 
 export default layoutSlice.reducer

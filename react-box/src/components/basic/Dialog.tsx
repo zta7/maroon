@@ -19,6 +19,7 @@ import {
   Placement,
 } from "@floating-ui/react-dom-interactions"
 import { mergeRefs } from "react-merge-refs"
+import { Fade } from "../transition/Fade"
 
 interface useDialogStateProps {
   placement?: Placement
@@ -90,38 +91,25 @@ export const Dialog = forwardRef<
     () => mergeRefs([state.floating, propRef]),
     [state.floating, propRef]
   )
-
-  const transitions = useTransition(state.open, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  })
-
   return (
     <>
       <FloatingPortal>
-        {transitions((styles, bool) => {
-          return (
-            bool && (
-              <animated.div style={styles} className="z-50">
-                <FloatingOverlay
-                  lockScroll
-                  className="flex items-center justify-center bg-indigo-500/30">
-                  <FloatingFocusManager context={state.context}>
-                    <div
-                      style={{
-                        maxHeight: "80vh",
-                        maxWidth: "calc(100vw - 24px)",
-                      }}
-                      className="overflow-hidden rounded-lg bg-white">
-                      <div ref={ref} {...state.getFloatingProps(props)}></div>
-                    </div>
-                  </FloatingFocusManager>
-                </FloatingOverlay>
-              </animated.div>
-            )
-          )
-        })}
+        <Fade state={state.open}>
+          <FloatingOverlay
+            lockScroll
+            className="flex items-center justify-center bg-indigo-500/30">
+            <FloatingFocusManager context={state.context}>
+              <div
+                style={{
+                  maxHeight: "80vh",
+                  maxWidth: "calc(100vw - 24px)",
+                }}
+                className="overflow-hidden rounded-lg bg-white">
+                <div ref={ref} {...state.getFloatingProps(props)}></div>
+              </div>
+            </FloatingFocusManager>
+          </FloatingOverlay>
+        </Fade>
       </FloatingPortal>
     </>
   )

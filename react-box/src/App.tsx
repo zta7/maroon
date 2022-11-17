@@ -22,9 +22,9 @@ const App = () => {
         }
       : {
           gridTemplateAreas: `
-            "left-side header header"
-            "left-side main main"
-            "left-side main main"
+          "left-side header right-side"
+          "left-side main main"
+          "left-side main main"
           `,
         }
   }, [right])
@@ -36,14 +36,12 @@ const App = () => {
       <LeftDrawer />
       <HeaderLeft className="header group/Header flex h-10 flex-row items-center self-center justify-self-start px-4" />
       <HeaderRight
-        className={`flex h-10 flex-row items-center justify-between ${
-          right
-            ? "right-side z-10 w-full self-start justify-self-end"
-            : "header justify-self-end"
+        className={`right-side flex h-10 flex-row items-center justify-between px-2 ${
+          right ? "z-10 w-full self-start justify-self-end" : "justify-self-end"
         }`}
       />
       <Main className="main relative overflow-auto" />
-      {right && <RightDrawer />}
+      <RightDrawer />
     </div>
   )
 }

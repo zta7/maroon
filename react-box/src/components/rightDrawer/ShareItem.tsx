@@ -3,22 +3,23 @@ import { Item } from "../basic/List"
 import { Popover, PopoverAnchor, usePopoverState } from "../basic/Popover"
 import { useTooltipState, TooltipAnchor, Tooltip } from "../basic/Tooltip"
 
-export const UpdateItem = () => {
-  const tooltip = useTooltipState({ placement: "right" })
-  const popover = usePopoverState({ placement: "right" })
+export const ShareItem = () => {
+  const tooltip = useTooltipState({ placement: "bottom" })
+  const popover = usePopoverState({ placement: "bottom" })
   return (
     <>
       <TooltipAnchor state={tooltip} asChild>
         <PopoverAnchor state={popover} asChild>
-          <Item rounded onClick={() => popover.setOpen(true)}>
-            <Icon className="mr-2" name="mdi-update" />
-            <span className="text-sm">Update</span>
+          <Item
+            rounded
+            onClick={() => popover.setOpen(true)}
+            className="text-sm">
+            Share
           </Item>
         </PopoverAnchor>
       </TooltipAnchor>
       <Tooltip state={tooltip}>
-        <div>Update All pages in this workspace</div>
-        <div className="text-gray-400">cmd+O+P</div>
+        <div>Share or publish to the web</div>
       </Tooltip>
 
       <Popover state={popover}>

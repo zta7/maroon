@@ -1,22 +1,25 @@
-import { Dispatch, SetStateAction } from "react"
-import { Item } from "src/components/basic/List"
+import { Item, List } from "src/components/basic/List"
 import { Icon } from "src/components/basic/Icon"
 import { useSelector, useDispatch } from "react-redux"
 import { toggleRight } from "src/store/layout"
+import { MenuItem } from "src/components/rightDrawer/MenuItem"
+import { FavouriteItem } from "src/components/rightDrawer/FavouriteItem"
+import { HistoryItem } from "src/components/rightDrawer/HistoryItem"
+import { CommentItem } from "src/components/rightDrawer/CommentItem"
+import { ShareItem } from "src/components/rightDrawer/ShareItem"
 
-const btns = [
-  { title: "Share", tooltip: "Share or publish to the web." },
-  { icon: "mdi-comment-outline", tooltip: "View all comments." },
-  { icon: "mdi-history", tooltip: "View all updates." },
-  { icon: "mdi-star-outline", tooltip: "Pin this page in your sidebar." },
-  { icon: "mdi-dots-horizontal", tooltip: "more..." },
-]
-
-export const HeaderRight = <T extends React.HTMLProps<Element> >({
+export const HeaderRight = <T extends React.HTMLProps<Element>>({
   className,
 }: T) => {
-  const {right} = useSelector((state: any) => state.layout)
+  const { right } = useSelector((state: any) => state.layout)
   const dispatch = useDispatch()
+  // const selectedItem = []
+  const onHistoryClick = () => {
+    dispatch(toggleRight())
+  }
+  const onCommentClick = () => {
+    dispatch(toggleRight())
+  }
   return (
     <div className={className}>
       {right && (
@@ -24,15 +27,12 @@ export const HeaderRight = <T extends React.HTMLProps<Element> >({
           <Icon name="mdi-chevron-double-right" className="rounded text-lg" />
         </Item>
       )}
-      <div className="flex flex-row flex-nowrap">
-        {btns.map(({ title, icon }, i) => {
-          return (
-            <Item rounded key={i} onClick={() => dispatch(toggleRight())}>
-              {title && <span className="text-sm">{title}</span>}
-              {icon && <Icon name={icon} className="text-xl" />}
-            </Item>
-          )
-        })}
+      <div className="flex flex-row flex-nowrap gap-2 text-lg">
+        <ShareItem />
+        <CommentItem onClick={onCommentClick} />
+        <HistoryItem onClick={onHistoryClick} />
+        <FavouriteItem />
+        <MenuItem />
       </div>
     </div>
   )
