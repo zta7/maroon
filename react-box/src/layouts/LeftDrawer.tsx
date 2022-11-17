@@ -78,7 +78,7 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
                 : `translateX(-${width - 40}px) translateY(40px)`,
           }}>
           <div
-            className={`h-full w-full ${
+            className={`h-full w-full z-10${
               left === LeftStatus.Visible ? "" : "pointer-events-none"
             }`}>
             <List className="group/LeftDrawer h-full w-full">
