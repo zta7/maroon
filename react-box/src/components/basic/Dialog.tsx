@@ -103,10 +103,10 @@ export const Dialog = forwardRef<
         {transitions((styles, bool) => {
           return (
             bool && (
-              <animated.div style={styles}>
+              <animated.div style={styles} className="z-50">
                 <FloatingOverlay
                   lockScroll
-                  className="z-50 flex items-center justify-center bg-indigo-500/30">
+                  className="flex items-center justify-center bg-indigo-500/30">
                   <FloatingFocusManager context={state.context}>
                     <div
                       style={{

@@ -15,7 +15,7 @@ export const RightDrawer = <T extends React.HTMLProps<Element>>({}: T) => {
     },
     { axis: "x" }
   )
-  
+
   return (
     <div className="right-side relative" style={{ width: rightSideWidth }}>
       <div

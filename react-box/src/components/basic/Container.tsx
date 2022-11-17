@@ -1,9 +1,9 @@
 import { forwardRef, HTMLProps } from "react"
 
 export const Container = forwardRef<HTMLDivElement, HTMLProps<HTMLElement>>(
-  function Container({ children, className, style }, propRef) {
+  function Container({ children, ...props }, propRef) {
     return (
-      <div ref={propRef} className={className} style={style}>
+      <div {...props} ref={propRef}>
         {children}
       </div>
     )

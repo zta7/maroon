@@ -24,9 +24,11 @@ export const Item = forwardRef<
     "relative flex flex-row flex-nowrap items-center hover:bg-neutral-200 cursor-pointer" +
     " "
   const arr = Children.toArray(children)
-  if(arr.length > 0) {
+  if (arr.length > 1) {
     if (rounded) _className += "rounded-md mx-1 px-2 py-1" + " "
     else _className += "px-3 py-1" + " "
+  } else if (arr.length === 1) {
+    _className += "p-1 rounded-md" + " "
   }
 
   className = _className + className

@@ -34,7 +34,7 @@ const App = () => {
       className="layout h-full w-full select-none text-gray-500"
       style={{ ...layoutStyle() }}>
       <LeftDrawer />
-      <HeaderLeft className="header group/Header flex flex-row items-center self-center justify-self-start px-4" />
+      <HeaderLeft className="header group/Header flex h-10 flex-row items-center self-center justify-self-start px-4" />
       <HeaderRight
         className={`flex h-10 flex-row items-center justify-between ${
           right
