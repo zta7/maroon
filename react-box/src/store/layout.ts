@@ -6,11 +6,17 @@ export enum LeftStatus {
   Invisible = 2,
 }
 
+export enum RightStatus {
+  Comment = 0,
+  Update = 1,
+  Invisible = 2,
+}
+
 export const layoutSlice = createSlice({
   name: "layout",
   initialState: {
     left: LeftStatus.Visible,
-    right: false,
+    right: RightStatus.Invisible,
     favourite: false,
   },
 
@@ -18,8 +24,8 @@ export const layoutSlice = createSlice({
     toggleLeft: (state, { payload }) => {
       state.left = payload
     },
-    toggleRight: (state) => {
-      state.right = !state.right
+    toggleRight: (state, { payload }) => {
+      state.right = payload
     },
     toggleFavourite: (state) => {
       state.favourite = !state.favourite

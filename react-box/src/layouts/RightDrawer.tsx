@@ -1,8 +1,9 @@
 import { useDrag } from "@use-gesture/react"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { useSelector } from "react-redux"
 import { SplitterLine } from "src/components/rightDrawer/SplitterLine"
 import { Slide } from "src/components/transition/Slide"
+import { RightStatus } from "src/store/layout"
 
 export const RightDrawer = () => {
   const [width, setWidth] = useState(400)
@@ -12,7 +13,7 @@ export const RightDrawer = () => {
 
   return (
     <Slide
-      state={right}
+      state={right !== RightStatus.Invisible}
       className="right-side group/rightSide relative"
       style={{ width }}>
       <div className="mt-10 h-[calc(100%-40px)] w-full overflow-auto">

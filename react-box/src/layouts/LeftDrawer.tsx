@@ -10,6 +10,8 @@ import { LeftStatus } from "../store/layout"
 import { Container } from "src/components/basic/Container"
 import { SplitterLine } from "src/components/leftDrawer/SplitterLine"
 import { useHoverDirty } from "react-use"
+import { Stack } from "src/components/basic/Stack"
+import { HeaderItem } from "src/components/leftDrawer/HeaderItem"
 
 const Space = () => {
   return <div className="h-6 w-full"></div>
@@ -39,25 +41,9 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
       }
     }, [isHover])
 
-    const onToggleLeftClick = () => {
-      setBeforeMouseFirstMove(true)
-      dispatch(toggleLeft(LeftStatus.VisibleMini))
-
-      const detectMouseFirstMove = () => {
-        dispatch(toggleLeft(LeftStatus.Invisible))
-        setBeforeMouseFirstMove(false)
-        window.removeEventListener("mousemove", detectMouseFirstMove, {
-          capture: true,
-        })
-      }
-      window.addEventListener("mousemove", detectMouseFirstMove, {
-        capture: true,
-      })
-    }
-
     return (
       <Container
-        className="left-side relative"
+        className="left-side relative z-10"
         style={{ width: left === LeftStatus.Visible ? width : 0 }}>
         <div
           ref={leftDrawerRef}
@@ -78,24 +64,11 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
                 : `translateX(-${width - 40}px) translateY(40px)`,
           }}>
           <div
-            className={`h-full w-full z-10${
-              left === LeftStatus.Visible ? "" : "pointer-events-none"
+            className={`h-full w-full ${
+              left !== LeftStatus.Invisible ? "" : "pointer-events-none"
             }`}>
-            <List className="group/LeftDrawer h-full w-full">
-              <Item className="h-10 shrink-0">
-                <Icon name="mdi-coffee" className="mr-2" />
-                <div className="flex grow flex-row items-center">
-                  <span className="mr-2">Bingo</span>
-                  <Icon name="mdi-more" />
-                </div>
-                {left === LeftStatus.Visible && (
-                  <Icon
-                    onClick={() => onToggleLeftClick()}
-                    name="mdi-chevron-double-left"
-                    className="hidden rounded text-lg hover:bg-neutral-300 group-hover/LeftDrawer:flex"
-                  />
-                )}
-              </Item>
+            <Stack className="group/LeftDrawer h-full w-full" column>
+              <HeaderItem setBeforeMouseFirstMove={setBeforeMouseFirstMove} />
               <SearchItem />
               <UpdateItem />
               <SettingsItem />
@@ -131,7 +104,7 @@ export const LeftDrawer = forwardRef<HTMLElement, HTMLProps<HTMLDivElement>>(
                 <Icon name="mdi-plus" className="mr-2 text-lg" />
                 <span className="text-sm">New page</span>
               </Item>
-            </List>
+            </Stack>
             <SplitterLine
               width={width}
               minWidth={minWidth}

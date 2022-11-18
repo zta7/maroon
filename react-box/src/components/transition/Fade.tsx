@@ -1,4 +1,4 @@
-import { forwardRef, HTMLProps, useState } from "react"
+import { forwardRef, HTMLProps } from "react"
 import { animated, useTransition } from "react-spring"
 
 interface Props {
