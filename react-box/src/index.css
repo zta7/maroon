@@ -86,18 +86,3 @@ body {
   min-height: 0;
 }
 
-
-.resizer.isResizing {
-  background: blue;
-  opacity: 1;
-}
-
-@media (hover: hover) {
-  .resizer {
-    opacity: 0;
-  }
-
-  *:hover > .resizer {
-    opacity: 1;
-  }
-}

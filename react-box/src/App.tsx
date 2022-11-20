@@ -1,12 +1,9 @@
 import { HeaderLeft } from "./layouts/HeaderLeft"
 import { LeftDrawer } from "./layouts/LeftDrawer"
-// import { Main } from "./layouts/Main"
-import { useDrag, useHover } from "@use-gesture/react"
 import { RightDrawer } from "./layouts/RightDrawer"
-// import { useWindowSize } from "react-use"
 import { HeaderRight } from "./layouts/HeaderRight"
 import { Main } from "./layouts/Main"
-import { useCallback, useRef, useState } from "react"
+import { useCallback } from "react"
 import { useSelector } from "react-redux"
 import { RightStatus } from "./store/layout"
 const App = () => {
