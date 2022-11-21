@@ -44,15 +44,16 @@ export const Table = () => {
               {
                 accessorKey: "createdAt",
                 minSize: 100,
-                size: 250,
+                size: 50,
               },
               {
                 accessorKey: "updatedAt",
                 minSize: 100,
-                size: 300,
+                size: 100,
               },
               {
                 id: "actions",
+                draggable: false,
                 // size: 'auto',
                 header: () => (
                   <Stack className="h-full w-full text-xl">
