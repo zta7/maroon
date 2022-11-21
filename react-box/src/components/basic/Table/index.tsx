@@ -21,12 +21,12 @@ export const Table = () => {
           {
             accessorKey: "id",
             minSize: 100,
-            size: 200,
+            size: 100,
           },
           {
             accessorKey: "name",
             minSize: 100,
-            size: 200,
+            size: 150,
           },
         ],
       },
@@ -44,12 +44,12 @@ export const Table = () => {
               {
                 accessorKey: "createdAt",
                 minSize: 100,
-                size: 200,
+                size: 250,
               },
               {
                 accessorKey: "updatedAt",
                 minSize: 100,
-                size: 200,
+                size: 300,
               },
               {
                 id: "actions",
@@ -124,7 +124,6 @@ export const Table = () => {
           // </div>
         )
       })}
-      {/* </div> */}
       <div>
         {table.getRowModel().rows.map((row, i, arr) => {
           return (

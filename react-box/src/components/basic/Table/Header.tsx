@@ -21,63 +21,61 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   { isLast, headers, setColumnOrder },
   propRef
 ) {
+  // 0 1 2 3 4
+  
+  // 0
+
   const fn =
     (
       order: _Header<never, unknown>[],
       originalIndex = 0,
-      curIndex = 0,
       x = 0,
       active = false
     ) =>
     (index: number) => {
-      if (active && index === originalIndex)
+      if (active && index === originalIndex) {
+        const left = headers.slice(0, index).reduce((arr, cur) => arr += cur.getSize(), 0)
         return {
-          x,
+          position: 'absolute',
+          left: left + x,
           zIndex: 1,
-          immediate: (key: string) => key === "zIndex",
-        }
-      else if (active) {
-        const otherCurIndex = order.indexOf(headers[index])
-        const activeHeader = headers[originalIndex]
-        const x = otherCurIndex > curIndex ? 0 : -activeHeader.getSize()
-        return {
-          x,
+          immediate: true
         }
       }
-      return {
-        x: 0,
+      else{
+        const curIndex = order.indexOf(headers[index])
+        return {
+          position: 'absolute',
+          left: order.slice(0, curIndex).reduce((arr, cur) => arr += cur.getSize(), 0),
+          immediate: false
+        }
       }
     }
   const order = useRef(headers)
-  const [springs, api] = useSprings(headers.length, fn(order.current))
-  const dragBind = useDrag(({ args: [header], active, movement: [x] }) => {
-    console.log(header)
-    const curIndex = order.current.indexOf(header)
-    const toIndex = findClosestIndex(
-      order.current.map((e) => e.getStart()),
-      order.current[curIndex].getStart() + x
-    )
-    const newOrder = swap(order.current, curIndex, toIndex)
-    api.start(fn(newOrder, curIndex, toIndex, x, active))
-    if (!active) {
-      // api.stop()
-      console.log(newOrder.map((e) => e.id))
+  const [springs, api] = useSprings(headers.length, () => ({}))
 
-      setColumnOrder([
-        "name",
-        "password",
-        "id",
-        "createdAt",
-        "updatedAt",
-        "actions",
-      ])
+  const dragBind = useDrag(async({ args: [header], active, movement: [x], first }) => {
+
+    // if(first) api.start(() => ({ position: 'absolute' }))
+
+    const curIndex = headers.indexOf(header)
+    const toIndex = findClosestIndex(
+      headers.map((e) => e.getStart()),
+      headers[curIndex].getStart() + x
+    )
+    const newOrder = swap(headers, curIndex, toIndex)
+    const promises = api.start(fn(newOrder, curIndex, x, active))
+    if (!active) {
+      await Promise.all(promises)
+      // console.log(newOrder.map((e) => e.id))
+      // setColumnOrder(newOrder.map((e) => e.id))
     }
   })
 
   return (
     <div
       ref={propRef}
-      className={`flex flex-row border-t ${
+      className={`flex flex-row border-t h-6 relative ${
         isLast ? "sticky top-0 z-10 border-b bg-white" : ""
       }`}>
       {springs.map((style, i, arr) => {
@@ -90,7 +88,7 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
               className={`relative ${!isLastColumn ? "border-r" : ""} ${
                 isLastColumn ? "grow" : ""
               }`}>
-              <div className="touch-auto" {...dragBind(header)}>
+              <div style={{ touchAction: 'none' }} {...dragBind(header)}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
