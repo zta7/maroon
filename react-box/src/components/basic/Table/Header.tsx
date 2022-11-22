@@ -2,25 +2,27 @@ import {
   ColumnOrderState,
   flexRender,
   Header as _Header,
+  Table,
 } from "@tanstack/react-table"
 import { useDrag } from "@use-gesture/react"
 import { Dispatch, forwardRef, SetStateAction, useEffect, useRef } from "react"
 import { animated, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"
+import { ActionHeader } from "./headers/ActionHeader"
 
 interface Props {
-  headers: Array<_Header<never, unknown>>
-  setColumnOrder: Dispatch<SetStateAction<ColumnOrderState>>
+  headers: Array<_Header<any, unknown>>
+  table: Table<any>
 }
 
 export const Header = forwardRef<HTMLDivElement, Props>(function Header(
-  {headers, setColumnOrder },
+  { headers, table },
   propRef
 ) {
   const fn =
     (
-      order: _Header<never, unknown>[],
+      order: _Header<any, unknown>[],
       originalIndex = 0,
       x = 0,
       active = false
@@ -50,27 +52,18 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
 
   const dragBind = useDrag(
     async ({ args: [header], active, movement: [x] }) => {
-
       const curIndex = headers.indexOf(header)
       const toIndex = findClosestIndex(
-        headers.map((header) => header.column.columnDef.affixed ? -Infinity: header.getStart()),
+        headers.map((header) => header.getStart()),
         headers[curIndex].getStart() + x
       )
-
-      // const target = headers[curIndex].getStart() + x
-      // header.reduce((a: any, b: any) => {
-
-      //   return Math.abs(b.getStart() - target) < Math.abs(a.getStart() - target)
-      //     ? b
-      //     : a
-      // })
 
       const newOrder = swap(headers, curIndex, toIndex)
       const promises = api.start(fn(newOrder, curIndex, x, active))
       if (!active) {
         await Promise.all(promises)
         api.start((e) => ({ x: 0, immediate: true }))
-        setColumnOrder(newOrder.map((e: any) => e.id))
+        table.setColumnOrder(newOrder.map((e: any) => e.id))
       }
     },
     {
@@ -79,42 +72,41 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   )
 
   return (
-    <div
-      ref={propRef}
-      className="flex h-8 flex-row border-t sticky top-0 z-10 border-b bg-white">
-      {springs.map((style, i, arr) => {
-        const header = headers[i]
-        const isLastColumn = i === arr.length - 1
-        console.log(header.getContext())
-        return (
-          <animated.div
-            key={i}
-            style={{ ...style, width: header.getSize() }}
-            className="relative border-r last:border-r-0 last:grow">
-            <div className="h-full touch-none"
-              {...header.column.columnDef.affixed ? false : dragBind(header)}>
-
-              {header.isPlaceholder
-                ? null
-                : flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-            </div>
-            {!isLastColumn && (
-              <div
-                onMouseDown={header.getResizeHandler()}
-                onTouchStart={header.getResizeHandler()}
-                className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none ${
-                  header.column.getIsResizing()
-                    ? "bg-blue-200"
-                    : "hover:bg-red-300"
-                }`}
-              />
-            )}
-          </animated.div>
-        )
-      })}
+    <div className="sticky top-0 z-10 flex h-8 flex-row border-t border-b bg-white">
+      <div className="flex flex-row">
+        {springs.map((style, i, arr) => {
+          const header = headers[i]
+          // const isLastColumn = i === arr.length - 1
+          // console.log(header.getContext())
+          return (
+            <>
+              <animated.div
+                key={i}
+                style={{ ...style, width: header.getSize() }}
+                className="relative border-r">
+                <div className="h-full touch-none" {...dragBind(header)}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </div>
+                <div
+                  onMouseDown={header.getResizeHandler()}
+                  onTouchStart={header.getResizeHandler()}
+                  className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none ${
+                    header.column.getIsResizing()
+                      ? "bg-blue-200"
+                      : "hover:bg-red-300"
+                  }`}
+                />
+              </animated.div>
+            </>
+          )
+        })}
+      </div>
+      <ActionHeader />
     </div>
   )
 })
