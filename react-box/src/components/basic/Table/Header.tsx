@@ -11,12 +11,11 @@ import swap from "lodash-move"
 
 interface Props {
   headers: Array<_Header<never, unknown>>
-  isLast: boolean
   setColumnOrder: Dispatch<SetStateAction<ColumnOrderState>>
 }
 
 export const Header = forwardRef<HTMLDivElement, Props>(function Header(
-  { isLast, headers, setColumnOrder },
+  {headers, setColumnOrder },
   propRef
 ) {
   const fn =
@@ -51,9 +50,10 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
 
   const dragBind = useDrag(
     async ({ args: [header], active, movement: [x] }) => {
+
       const curIndex = headers.indexOf(header)
       const toIndex = findClosestIndex(
-        headers.map((e) => e.getStart()),
+        headers.map((header) => header.column.columnDef.affixed ? -Infinity: header.getStart()),
         headers[curIndex].getStart() + x
       )
 
@@ -81,20 +81,19 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   return (
     <div
       ref={propRef}
-      className={`relative flex h-6 flex-row border-t ${
-        isLast ? "sticky top-0 z-10 border-b bg-white" : ""
-      }`}>
+      className="flex h-8 flex-row border-t sticky top-0 z-10 border-b bg-white">
       {springs.map((style, i, arr) => {
         const header = headers[i]
         const isLastColumn = i === arr.length - 1
+        console.log(header.getContext())
         return (
           <animated.div
             key={i}
             style={{ ...style, width: header.getSize() }}
-            className={`relative ${!isLastColumn ? "border-r" : ""} ${
-              isLastColumn ? "grow" : ""
-            }`}>
-            <div className="h-full touch-none" {...dragBind(header)}>
+            className="relative border-r last:border-r-0 last:grow">
+            <div className="h-full touch-none"
+              {...header.column.columnDef.affixed ? false : dragBind(header)}>
+
               {header.isPlaceholder
                 ? null
                 : flexRender(
