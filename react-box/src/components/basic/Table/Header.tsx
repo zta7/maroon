@@ -9,7 +9,7 @@ import { Dispatch, forwardRef, SetStateAction, useEffect, useRef } from "react"
 import { animated, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"
-import { ActionHeader } from "./headers/ActionHeader"
+// import { ActionHeader } from "./headers/ActionHeader"
 
 interface Props {
   headers: Array<_Header<any, unknown>>
@@ -74,12 +74,9 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   return (
     <div className="sticky top-0 z-10 flex h-8 flex-row border-t border-b bg-white">
       <div className="flex flex-row">
-        {springs.map((style, i, arr) => {
+        {springs.map((style, i) => {
           const header = headers[i]
-          // const isLastColumn = i === arr.length - 1
-          // console.log(header.getContext())
           return (
-            <>
               <animated.div
                 key={i}
                 style={{ ...style, width: header.getSize() }}
@@ -102,11 +99,9 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
                   }`}
                 />
               </animated.div>
-            </>
           )
         })}
       </div>
-      <ActionHeader />
     </div>
   )
 })

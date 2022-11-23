@@ -111,7 +111,7 @@ export const Popover = forwardRef<
         {transitions((styles, bool) => {
           return (
             bool && (
-              <FloatingOverlay lockScroll>
+              <FloatingOverlay lockScroll className="z-50">
                 <FloatingFocusManager
                   context={state.context}
                   modal={false}
@@ -120,7 +120,7 @@ export const Popover = forwardRef<
                   <animated.div style={styles}>
                     <div
                       style={{
-                        position: "fixed",
+                        position: "absolute",
                         top: state.y ?? 0,
                         left: state.x ?? 0,
                       }}

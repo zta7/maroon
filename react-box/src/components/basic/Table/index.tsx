@@ -3,6 +3,7 @@ import {
   getCoreRowModel,
   flexRender,
   ColumnOrderState,
+  PaginationState,
 } from "@tanstack/react-table"
 
 import { useQuery } from "@tanstack/react-query"
@@ -13,6 +14,7 @@ import { Stack } from "../Stack"
 import { Header } from "./Header"
 import { ActionHeader } from "./headers/ActionHeader"
 import { NameHeader } from "./headers/NameHeader"
+import { Pagination } from "../Pagination"
 
 export const Table = () => {
   const columns = useMemo(
@@ -21,27 +23,20 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
-        footer: "Calculate",
-        header: ({ column }) => {
-          return <NameHeader text={column.id} />
-        },
       },
       {
         accessorKey: "password",
         minSize: 100,
         size: 200,
-        footer: "Calculate",
       },
       {
         accessorKey: "createdAt",
-        minSize: 100,
+        minSize: 300,
         size: 50,
-        footer: "Calculate",
       },
       {
         accessorKey: "updatedAt",
-        minSize: 100,
-        footer: "Calculate",
+        minSize: 300,
       },
       // {
       //   id: "actions",
@@ -53,16 +48,44 @@ export const Table = () => {
     []
   )
 
-  const {
-    isLoading,
-    error,
-    data = [],
-    isFetching,
-  } = useQuery(["user"], () => {
-    return api.get("user").then((res) => res.data)
-  })
+  // const [pagination, setPagination] = useState({ limit: 5, page: 1 })
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([])
+  const [page, setPage] = useState(1)
+  const {
+    // refetch,
+    isFetching,
+    data = [],
+  } = useQuery({
+    queryKey: ['user', page],
+    queryFn: () => {
+      return api.get("user", {
+        params: {
+          limit: 15,
+          offset: (page - 1) * 15
+        },
+        headers: {
+          Prefer: 'count=estimated'
+        }
+        }).then((res) => res.data)
+      },
+    // keepPreviousData: true
+  })
+
+    // ["user"], () => {
+    //   return api.get("user", {
+    //     params: {
+    //       limit: pagination.limit,
+    //       offset: (pagination.page - 1) * pagination.limit
+    //     },
+    //     headers: {
+    //       Prefer: 'count=estimated'
+    //     }
+    //   }).then((res) => res.data)
+    // }
+
+  const defaultData = useMemo(() => [], [])
+
   const table = useReactTable({
     data,
     state: {
@@ -72,30 +95,15 @@ export const Table = () => {
     columns,
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
+    manualPagination: true
   })
 
   return (
     <>
-      {!isLoading && (
+      <div className="w-full h-full relative">
         <div className="w-max min-w-full">
-          {/* <div className="flex flex-row">
-          {table.getAllLeafColumns().map((column, i) => {
-            return (
-              <div key={column.id}>
-                <div>
-                  <input
-                    {...{
-                      type: "checkbox",
-                      checked: column.getIsVisible(),
-                      onChange: column.getToggleVisibilityHandler(),
-                    }}
-                  />
-                  {column.id}
-                </div>
-              </div>
-            )
-          })}
-        </div> */}
+
+          { JSON.stringify(data) }
           <Header table={table} headers={table.getLeafHeaders()}></Header>
           <div>
             {table.getRowModel().rows.map((row) => {
@@ -117,33 +125,20 @@ export const Table = () => {
                         </div>
                       )
                     })}
-                    <div></div>
                   </>
                 </div>
               )
             })}
           </div>
-          {table.getFooterGroups().map((footerGroup) => (
-            <div
-              key={footerGroup.id}
-              className="group/footer no-wrap sticky bottom-0 flex h-8 flex-row border-t bg-white">
-              {footerGroup.headers.map((header) => (
-                <div
-                  key={header.id}
-                  style={{ width: header.getSize() }}
-                  className="btn flex flex-row items-center justify-end text-sm opacity-0 duration-200 first:opacity-100 group-hover/footer:opacity-100">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </div>
-              ))}
+          <div className="flex items-center gap-2">
+            <div onClick={() => setPage(state => state + 1)}>
+              { JSON.stringify(page) }
             </div>
-          ))}
+            {isFetching ? 'Loading...' : null}
+          </div>
+      
         </div>
-      )}
+      </div>
     </>
   )
 }
