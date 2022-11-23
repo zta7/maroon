@@ -11,6 +11,7 @@ import {
   shift,
   flip,
   FloatingOverlay,
+  Middleware,
 } from "@floating-ui/react-dom-interactions"
 import {
   cloneElement,
@@ -25,16 +26,20 @@ import { animated, useTransition } from "react-spring"
 
 interface usePopoverStateProps {
   placement: Placement
+  middleware?: Array<Middleware>
 }
 
-export const usePopoverState = ({ placement }: usePopoverStateProps) => {
+export const usePopoverState = ({
+  placement,
+  middleware = [],
+}: usePopoverStateProps) => {
   const [open, setOpen] = useState(false)
   const data = useFloating({
     placement,
     open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
-    middleware: [shift({ crossAxis: true }), flip()],
+    middleware,
   })
   const context = data.context
 

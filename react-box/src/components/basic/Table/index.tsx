@@ -4,17 +4,14 @@ import {
   flexRender,
   ColumnOrderState,
   PaginationState,
+  CellContext,
 } from "@tanstack/react-table"
 
 import { useQuery } from "@tanstack/react-query"
 import { api } from "src/boot/axios"
-import { useMemo, useState } from "react"
-import { Icon } from "../Icon"
-import { Stack } from "../Stack"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Header } from "./Header"
-import { ActionHeader } from "./headers/ActionHeader"
-import { NameHeader } from "./headers/NameHeader"
-import { Pagination } from "../Pagination"
+import { TextCell } from "./cells/TextCell"
 
 export const Table = () => {
   const columns = useMemo(
@@ -23,6 +20,9 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
+        cell: (context: CellContext<any, unknown>) => {
+          return <TextCell context={context} />
+        },
       },
       {
         accessorKey: "password",
@@ -38,72 +38,85 @@ export const Table = () => {
         accessorKey: "updatedAt",
         minSize: 300,
       },
-      // {
-      //   id: "actions",
-      //   size: 50,
-      //   affixed: true,
-      //   header: ActionHeader,
-      // },
     ],
     []
   )
 
-  // const [pagination, setPagination] = useState({ limit: 5, page: 1 })
-
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([])
-  const [page, setPage] = useState(1)
-  const {
-    // refetch,
-    isFetching,
-    data = [],
-  } = useQuery({
-    queryKey: ['user', page],
-    queryFn: () => {
-      return api.get("user", {
-        params: {
-          limit: 15,
-          offset: (page - 1) * 15
-        },
-        headers: {
-          Prefer: 'count=estimated'
-        }
-        }).then((res) => res.data)
-      },
-    // keepPreviousData: true
+  const [pageCount, setPageCount] = useState<number>()
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
   })
-
-    // ["user"], () => {
-    //   return api.get("user", {
-    //     params: {
-    //       limit: pagination.limit,
-    //       offset: (pagination.page - 1) * pagination.limit
-    //     },
-    //     headers: {
-    //       Prefer: 'count=estimated'
-    //     }
-    //   }).then((res) => res.data)
-    // }
-
-  const defaultData = useMemo(() => [], [])
+  const [data, setData] = useState<any>([])
+  const { isFetching } = useQuery({
+    queryKey: ["user", { pageIndex, pageSize }],
+    queryFn: () => {
+      return api
+        .get("user", {
+          params: {
+            limit: pageSize,
+            offset: pageIndex * pageSize,
+            order: "createdAt.asc",
+          },
+          headers: {
+            Prefer: "count=estimated",
+          },
+        })
+        .then((res) => {
+          const range = res.headers["content-range"]
+          const [, totalNumber] = range?.split("/") as Array<string>
+          setPageCount(Math.ceil(Number(totalNumber) / pageSize))
+          return res.data
+        })
+    },
+    onSuccess: setData,
+    keepPreviousData: true,
+  })
 
   const table = useReactTable({
     data,
     state: {
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
       columnOrder,
     },
+    // autoResetPageIndex,
     onColumnOrderChange: setColumnOrder,
     columns,
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true
+    pageCount,
+    onPaginationChange: setPagination,
+    manualPagination: true,
+    meta: {
+      updateColumn: (id: string, columnId: string, value: unknown) => {
+        setData((old: any[]) => {
+          const oldRow = old.find((e) => e.id === id)
+          oldRow[columnId] = value
+          api.patch(
+            "user",
+            {
+              [columnId]: value,
+            },
+            {
+              params: {
+                id: `eq.${id}`,
+              },
+            }
+          )
+          return old
+        })
+      },
+    },
   })
 
   return (
     <>
-      <div className="w-full h-full relative">
+      <div className="relative h-full w-full">
         <div className="w-max min-w-full">
-
-          { JSON.stringify(data) }
           <Header table={table} headers={table.getLeafHeaders()}></Header>
           <div>
             {table.getRowModel().rows.map((row) => {
@@ -131,12 +144,52 @@ export const Table = () => {
             })}
           </div>
           <div className="flex items-center gap-2">
-            <div onClick={() => setPage(state => state + 1)}>
-              { JSON.stringify(page) }
-            </div>
-            {isFetching ? 'Loading...' : null}
+            <button
+              className="rounded border p-1"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}>
+              {"<<"}
+            </button>
+            <button
+              className="rounded border p-1"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}>
+              {"<"}
+            </button>
+            <button
+              className="rounded border p-1"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}>
+              {">"}
+            </button>
+            <button
+              className="rounded border p-1"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}>
+              {">>"}
+            </button>
+            <span className="flex items-center gap-1">
+              <div>Page</div>
+              <strong>
+                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </strong>
+            </span>
+
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
           </div>
-      
+
+          {isFetching ? "Loading..." : null}
         </div>
       </div>
     </>

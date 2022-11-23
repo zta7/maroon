@@ -72,33 +72,33 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   )
 
   return (
-    <div className="sticky top-0 z-10 flex h-8 flex-row border-t border-b bg-white">
+    <div className="sticky top-0 flex h-8 flex-row border-t border-b bg-white">
       <div className="flex flex-row">
         {springs.map((style, i) => {
           const header = headers[i]
           return (
-              <animated.div
-                key={i}
-                style={{ ...style, width: header.getSize() }}
-                className="relative border-r">
-                <div className="h-full touch-none" {...dragBind(header)}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </div>
-                <div
-                  onMouseDown={header.getResizeHandler()}
-                  onTouchStart={header.getResizeHandler()}
-                  className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none ${
-                    header.column.getIsResizing()
-                      ? "bg-blue-200"
-                      : "hover:bg-red-300"
-                  }`}
-                />
-              </animated.div>
+            <animated.div
+              key={i}
+              style={{ ...style, width: header.getSize() }}
+              className="relative border-r">
+              <div className="h-full touch-none" {...dragBind(header)}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </div>
+              <div
+                onMouseDown={header.getResizeHandler()}
+                onTouchStart={header.getResizeHandler()}
+                className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none ${
+                  header.column.getIsResizing()
+                    ? "bg-blue-200"
+                    : "hover:bg-red-300"
+                }`}
+              />
+            </animated.div>
           )
         })}
       </div>
