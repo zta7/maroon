@@ -6,9 +6,10 @@ import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
 
 interface Props {
   context: CellContext<any, unknown>
+  options: Array<any>
 }
 
-export const TextCell = ({ context }: Props) => {
+export const SelectCell = ({ context, options }: Props) => {
   const { row, getValue, cell, table, column } = context
   const initialValue = getValue() as string || ''
   const [value, setValue] = useState<string>(initialValue)
@@ -24,7 +25,7 @@ export const TextCell = ({ context }: Props) => {
     setValue(initialValue)
   }, [row.original.id])
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
     setValue(value)
     table.options.meta?.updateColumn(row.original.id, column.id, value)
@@ -36,12 +37,20 @@ export const TextCell = ({ context }: Props) => {
         <div>{value}</div>
       </PopoverAnchor>
       <Popover state={popover}>
-        <input
+        <select
           autoFocus
           value={value}
           onChange={onChange}
           style={{ width: cell.column.getSize() }}
-          className="ring"></input>
+          className="ring">
+          {
+            options.map(e => {
+              return (
+                <option key={e} value={e}>{e}</option>
+              )
+            })
+          }
+        </select>
       </Popover>
     </>
   )

@@ -5,6 +5,8 @@ import {
   ColumnOrderState,
   PaginationState,
   CellContext,
+  HeaderContext,
+  RowData,
 } from "@tanstack/react-table"
 
 import { useQuery } from "@tanstack/react-query"
@@ -12,6 +14,22 @@ import { api } from "src/boot/axios"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Header } from "./Header"
 import { TextCell } from "./cells/TextCell"
+import { TextHeader } from "./headers/TextHeader"
+import { SelectCell } from "./cells/SelectCell"
+import { SelectHeader } from "./headers/SelectHeader"
+import { EmailHeader } from "./headers/EmailHeader"
+import { EmailCell } from "./cells/EmailCell"
+import { PhoneHeader } from "./headers/PhoneHeader"
+import { PhoneCell } from "./cells/PhoneCell"
+import { DateCell } from "./cells/DateCell"
+import { DateHeader } from "./headers/DateHeader"
+
+declare module '@tanstack/react-table' {
+  interface TableMeta<TData extends RowData> {
+    updateColumn: (id: string, columnId: string, value: unknown) => void
+  }
+}
+
 
 export const Table = () => {
   const columns = useMemo(
@@ -20,23 +38,36 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
-        cell: (context: CellContext<any, unknown>) => {
-          return <TextCell context={context} />
-        },
+        header: (context: HeaderContext<any, unknown>) => <TextHeader context={context}/>,
+        cell: (context: CellContext<any, unknown>) => <TextCell context={context} />
       },
       {
         accessorKey: "password",
         minSize: 100,
         size: 200,
+        header: (context: HeaderContext<any, unknown>) => <SelectHeader context={context}/>,
+        cell: (context: CellContext<any, unknown>) => <SelectCell context={context} options={[1,2,3,4]}/>
       },
       {
-        accessorKey: "createdAt",
-        minSize: 300,
-        size: 50,
+        accessorKey: "email",
+        minSize: 100,
+        size: 200,
+        header: (context: HeaderContext<any, unknown>) => <EmailHeader context={context}/>,
+        cell: (context: CellContext<any, unknown>) => <EmailCell context={context}/>
       },
       {
-        accessorKey: "updatedAt",
-        minSize: 300,
+        accessorKey: "phone",
+        minSize: 100,
+        size: 200,
+        header: (context: HeaderContext<any, unknown>) => <PhoneHeader context={context}/>,
+        cell: (context: CellContext<any, unknown>) => <PhoneCell context={context}/>
+      },
+      {
+        accessorKey: "birthday",
+        minSize: 100,
+        size: 200,
+        header: (context: HeaderContext<any, unknown>) => <DateHeader context={context}/>,
+        cell: (context: CellContext<any, unknown>) => <DateCell context={context}/>
       },
     ],
     []
@@ -57,7 +88,7 @@ export const Table = () => {
           params: {
             limit: pageSize,
             offset: pageIndex * pageSize,
-            order: "createdAt.asc",
+            order: "createdAt.desc",
           },
           headers: {
             Prefer: "count=estimated",
@@ -83,7 +114,6 @@ export const Table = () => {
       },
       columnOrder,
     },
-    // autoResetPageIndex,
     onColumnOrderChange: setColumnOrder,
     columns,
     columnResizeMode: "onChange",
@@ -94,6 +124,7 @@ export const Table = () => {
     meta: {
       updateColumn: (id: string, columnId: string, value: unknown) => {
         setData((old: any[]) => {
+          console.log(1114124)
           const oldRow = old.find((e) => e.id === id)
           oldRow[columnId] = value
           api.patch(

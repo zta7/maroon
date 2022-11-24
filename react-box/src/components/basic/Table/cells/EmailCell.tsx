@@ -8,7 +8,7 @@ interface Props {
   context: CellContext<any, unknown>
 }
 
-export const TextCell = ({ context }: Props) => {
+export const EmailCell = ({ context }: Props) => {
   const { row, getValue, cell, table, column } = context
   const initialValue = getValue() as string || ''
   const [value, setValue] = useState<string>(initialValue)
@@ -33,7 +33,9 @@ export const TextCell = ({ context }: Props) => {
   return (
     <>
       <PopoverAnchor state={popover} asChild>
-        <div>{value}</div>
+        <div className="w-full h-full underline">
+          {value}
+        </div>
       </PopoverAnchor>
       <Popover state={popover}>
         <input

@@ -5,7 +5,7 @@ import {
   Table,
 } from "@tanstack/react-table"
 import { useDrag } from "@use-gesture/react"
-import { Dispatch, forwardRef, SetStateAction, useEffect, useRef } from "react"
+import { forwardRef,  } from "react"
 import { animated, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"
@@ -92,7 +92,7 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
               <div
                 onMouseDown={header.getResizeHandler()}
                 onTouchStart={header.getResizeHandler()}
-                className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none ${
+                className={`absolute -right-[2px] top-0 bottom-0 w-[4px] cursor-col-resize select-none transition delay-75 ${
                   header.column.getIsResizing()
                     ? "bg-blue-200"
                     : "hover:bg-red-300"

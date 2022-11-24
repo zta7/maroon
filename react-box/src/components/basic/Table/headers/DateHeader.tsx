@@ -6,11 +6,11 @@ interface Props {
   context: HeaderContext<any, unknown>
 }
 
-export const TextHeader = ({ context }: Props) => {
+export const DateHeader = ({ context }: Props) => {
   const { header, column } = context
   return (
     <Stack className="btn h-full w-full px-2 text-neutral-400">
-      <Icon name='mdi-text' className="mr-2 text-xl"/>
+      <Icon name='mdi-calendar' className="mr-2 text-xl"/>
       <div className="text-sm">{ header.id }</div>
     </Stack>
   )

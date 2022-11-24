@@ -104,16 +104,36 @@ export const Popover = forwardRef<
     [state.floating, propRef]
   )
 
-  const transitions = useTransition(state.open, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  })
+  // const transitions = useTransition(state.open, {
+  //   from: { opacity: 0 },
+  //   enter: { opacity: 1 },
+  //   leave: { opacity: 0 },
+  // })
 
   return (
     <>
       <FloatingPortal>
-        {transitions((styles, bool) => {
+        {
+           state.open && (
+            <FloatingOverlay lockScroll className="z-50">
+              <FloatingFocusManager
+                context={state.context}
+                modal={false}
+                order={["reference", "content"]}
+                returnFocus={false}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: state.y ?? 0,
+                      left: state.x ?? 0,
+                    }}
+                    ref={ref}
+                    {...state.getFloatingProps(props)}></div>
+              </FloatingFocusManager>
+            </FloatingOverlay>
+          )
+        }
+        {/* {transitions((styles, bool) => {
           return (
             bool && (
               <FloatingOverlay lockScroll className="z-50">
@@ -136,7 +156,7 @@ export const Popover = forwardRef<
               </FloatingOverlay>
             )
           )
-        })}
+        })} */}
       </FloatingPortal>
     </>
   )
