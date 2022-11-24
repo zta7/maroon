@@ -36,7 +36,8 @@
     "react-split": "^2.0.14",
     "react-split-grid": "^1.0.4",
     "react-spring": "^9.5.5",
-    "react-use": "^17.4.0"
+    "react-use": "^17.4.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@iconify/json": "^2.1.133",

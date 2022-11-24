@@ -5,7 +5,7 @@ import {
   Table,
 } from "@tanstack/react-table"
 import { useDrag } from "@use-gesture/react"
-import { forwardRef,  } from "react"
+import { forwardRef } from "react"
 import { animated, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"

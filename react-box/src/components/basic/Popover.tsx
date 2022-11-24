@@ -13,6 +13,7 @@ import {
   FloatingOverlay,
   Middleware,
 } from "@floating-ui/react-dom-interactions"
+import { Props } from "@floating-ui/react-dom-interactions/src/hooks/useDismiss"
 import {
   cloneElement,
   forwardRef,
@@ -27,17 +28,19 @@ import { animated, useTransition } from "react-spring"
 interface usePopoverStateProps {
   placement: Placement
   middleware?: Array<Middleware>
+  onOpenChange?: null | ((v: boolean) => void)
 }
 
 export const usePopoverState = ({
   placement,
   middleware = [],
+  onOpenChange = null,
 }: usePopoverStateProps) => {
   const [open, setOpen] = useState(false)
   const data = useFloating({
     placement,
     open,
-    onOpenChange: setOpen,
+    onOpenChange: onOpenChange || setOpen,
     whileElementsMounted: autoUpdate,
     middleware,
   })
@@ -113,26 +116,24 @@ export const Popover = forwardRef<
   return (
     <>
       <FloatingPortal>
-        {
-           state.open && (
-            <FloatingOverlay lockScroll className="z-50">
-              <FloatingFocusManager
-                context={state.context}
-                modal={false}
-                order={["reference", "content"]}
-                returnFocus={false}>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: state.y ?? 0,
-                      left: state.x ?? 0,
-                    }}
-                    ref={ref}
-                    {...state.getFloatingProps(props)}></div>
-              </FloatingFocusManager>
-            </FloatingOverlay>
-          )
-        }
+        {state.open && (
+          <FloatingOverlay lockScroll className="z-50">
+            <FloatingFocusManager
+              context={state.context}
+              modal={false}
+              order={["reference", "content"]}
+              returnFocus={false}>
+              <div
+                style={{
+                  position: "absolute",
+                  top: state.y ?? 0,
+                  left: state.x ?? 0,
+                }}
+                ref={ref}
+                {...state.getFloatingProps(props)}></div>
+            </FloatingFocusManager>
+          </FloatingOverlay>
+        )}
         {/* {transitions((styles, bool) => {
           return (
             bool && (

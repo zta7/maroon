@@ -21,18 +21,20 @@ import React, {
 interface useTooltipStateProps {
   placement: Placement
   disabled?: Boolean
+  onOpenChange?: null | ((v: boolean) => void)
 }
 
 export function useTooltipState({
   placement,
   disabled = false,
+  onOpenChange = null,
 }: useTooltipStateProps) {
   const [open, setOpen] = React.useState(false)
 
   const data = useFloating({
     placement,
     open,
-    onOpenChange: setOpen,
+    onOpenChange: onOpenChange || setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [offset(8), shift({ crossAxis: true })],
   })

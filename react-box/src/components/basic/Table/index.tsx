@@ -11,7 +11,7 @@ import {
 
 import { useQuery } from "@tanstack/react-query"
 import { api } from "src/boot/axios"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Fragment, useMemo, useState } from "react"
 import { Header } from "./Header"
 import { TextCell } from "./cells/TextCell"
 import { TextHeader } from "./headers/TextHeader"
@@ -23,13 +23,15 @@ import { PhoneHeader } from "./headers/PhoneHeader"
 import { PhoneCell } from "./cells/PhoneCell"
 import { DateCell } from "./cells/DateCell"
 import { DateHeader } from "./headers/DateHeader"
+import { User, userSchema } from "src/schema/User"
+import { ObjectSchema } from "yup"
 
-declare module '@tanstack/react-table' {
+declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateColumn: (id: string, columnId: string, value: unknown) => void
+    schema: ObjectSchema<any>
   }
 }
-
 
 export const Table = () => {
   const columns = useMemo(
@@ -38,36 +40,56 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
-        header: (context: HeaderContext<any, unknown>) => <TextHeader context={context}/>,
-        cell: (context: CellContext<any, unknown>) => <TextCell context={context} />
+        header: (context: HeaderContext<any, unknown>) => (
+          <TextHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <TextCell context={context} />
+        ),
       },
       {
         accessorKey: "password",
         minSize: 100,
         size: 200,
-        header: (context: HeaderContext<any, unknown>) => <SelectHeader context={context}/>,
-        cell: (context: CellContext<any, unknown>) => <SelectCell context={context} options={[1,2,3,4]}/>
+        header: (context: HeaderContext<any, unknown>) => (
+          <SelectHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <SelectCell context={context} options={[1, 2, 3, 4]} />
+        ),
       },
       {
         accessorKey: "email",
         minSize: 100,
         size: 200,
-        header: (context: HeaderContext<any, unknown>) => <EmailHeader context={context}/>,
-        cell: (context: CellContext<any, unknown>) => <EmailCell context={context}/>
+        header: (context: HeaderContext<any, unknown>) => (
+          <EmailHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <EmailCell context={context} />
+        ),
       },
       {
         accessorKey: "phone",
         minSize: 100,
         size: 200,
-        header: (context: HeaderContext<any, unknown>) => <PhoneHeader context={context}/>,
-        cell: (context: CellContext<any, unknown>) => <PhoneCell context={context}/>
+        header: (context: HeaderContext<any, unknown>) => (
+          <PhoneHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <PhoneCell context={context} />
+        ),
       },
       {
         accessorKey: "birthday",
         minSize: 100,
         size: 200,
-        header: (context: HeaderContext<any, unknown>) => <DateHeader context={context}/>,
-        cell: (context: CellContext<any, unknown>) => <DateCell context={context}/>
+        header: (context: HeaderContext<any, unknown>) => (
+          <DateHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <DateCell context={context} />
+        ),
       },
     ],
     []
@@ -122,6 +144,7 @@ export const Table = () => {
     onPaginationChange: setPagination,
     manualPagination: true,
     meta: {
+      schema: userSchema,
       updateColumn: (id: string, columnId: string, value: unknown) => {
         setData((old: any[]) => {
           console.log(1114124)
@@ -158,15 +181,14 @@ export const Table = () => {
                   <>
                     {row.getVisibleCells().map((cell) => {
                       return (
-                        <div
-                          key={cell.id}
-                          style={{ width: cell.column.getSize() }}
-                          className="break-all border-r">
+                        // <div
+                        //   key={cell.id}
+                        <Fragment key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )}
-                        </div>
+                        </Fragment>
                       )
                     })}
                   </>

@@ -11,7 +11,7 @@ interface Props {
 
 export const SelectCell = ({ context, options }: Props) => {
   const { row, getValue, cell, table, column } = context
-  const initialValue = getValue() as string || ''
+  const initialValue = (getValue() as string) || ""
   const [value, setValue] = useState<string>(initialValue)
   const popover = usePopoverState({
     placement: "right",
@@ -34,7 +34,11 @@ export const SelectCell = ({ context, options }: Props) => {
   return (
     <>
       <PopoverAnchor state={popover} asChild>
-        <div>{value}</div>
+        <div
+          style={{ width: cell.column.getSize() }}
+          className="border-r px-2 py-1">
+          {value}
+        </div>
       </PopoverAnchor>
       <Popover state={popover}>
         <select
@@ -43,13 +47,13 @@ export const SelectCell = ({ context, options }: Props) => {
           onChange={onChange}
           style={{ width: cell.column.getSize() }}
           className="ring">
-          {
-            options.map(e => {
-              return (
-                <option key={e} value={e}>{e}</option>
-              )
-            })
-          }
+          {options.map((e) => {
+            return (
+              <option key={e} value={e}>
+                {e}
+              </option>
+            )
+          })}
         </select>
       </Popover>
     </>

@@ -10,7 +10,7 @@ interface Props {
 
 export const DateCell = ({ context }: Props) => {
   const { row, getValue, cell, table, column } = context
-  const initialValue = getValue() as string || ''
+  const initialValue = (getValue() as string) || ""
   const [value, setValue] = useState<string>(initialValue)
   const popover = usePopoverState({
     placement: "right",
@@ -33,11 +33,13 @@ export const DateCell = ({ context }: Props) => {
   return (
     <>
       <PopoverAnchor state={popover} asChild>
-        <div className="h-full w-full">{value}</div>
+        <div
+          style={{ width: cell.column.getSize() }}
+          className="border-r px-2 py-1">
+          {value}
+        </div>
       </PopoverAnchor>
-      <Popover state={popover}>
-        {/* - -! */}
-      </Popover>
+      <Popover state={popover}>{/* - -! */}</Popover>
     </>
   )
 }
