@@ -2,23 +2,35 @@ import { offset } from "@floating-ui/react-dom-interactions"
 import { CellContext } from "@tanstack/react-table"
 import {
   BaseSyntheticEvent,
+  ChangeEvent,
+  Children,
+  cloneElement,
+  isValidElement,
+  ReactElement,
   ReactNode,
+  useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react"
 import {
+  useEffectOnce,
+  useMeasure,
+  useUnmount,
   useUpdateEffect,
 } from "react-use"
 import { ValidationError } from "yup"
-import { Icon } from "../../Icon"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
 import { Tooltip, TooltipAnchor, useTooltipState } from "../../Tooltip"
+import { Icon } from "../../Icon"
 
 interface Props {
   context: CellContext<any, unknown>
+  children?: ReactNode
+  contentClassName?: string
 }
 
-export const EmailCell = ({ context}: Props) => {
+export const Cell = ({ context, children, contentClassName = '' }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const { row, getValue, cell, table, column } = context
   const initialValue = (getValue() as string) || ""
@@ -68,11 +80,11 @@ export const EmailCell = ({ context}: Props) => {
     setValue(initialValue)
   }, [row.original.id])
 
+  // const onEmailClick = (e: BaseSyntheticEvent) => {
+  //   e.stopPropagation()
+  //   window.location.href = `mailto:${value}`
+  // }
 
-  const onEmailClick = (e: BaseSyntheticEvent) => {
-    e.stopPropagation()
-    window.location.href = `mailto:${context.cell.getValue()}`
-  }
 
   return (
     <>
@@ -80,14 +92,10 @@ export const EmailCell = ({ context}: Props) => {
         <div
           ref={ref}
           style={{ width: cell.column.getSize() }}
-          tabIndex={0}
-          className="group/cell relative border-r px-2 py-1 underline underline-offset-4">
+          className={`group/cell relative border-r px-2 py-1 ${contentClassName}`}>
           {value}
           <div className="absolute top-2 right-2 hidden group-hover/cell:block">
-            <Icon
-              name="mdi-at"
-              onClick={onEmailClick}
-            /> 
+            {children}
           </div>
         </div>
       </PopoverAnchor>
@@ -112,4 +120,3 @@ export const EmailCell = ({ context}: Props) => {
     </>
   )
 }
-

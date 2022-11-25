@@ -18,12 +18,12 @@ interface Props {
   context: CellContext<any, unknown>
 }
 
-export const EmailCell = ({ context}: Props) => {
+export const NumberCell = ({ context }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const { row, getValue, cell, table, column } = context
-  const initialValue = (getValue() as string) || ""
+  const initialValue = getValue() as string
   const [value, setValue] = useState<string>(initialValue)
-  const [popValue, setPopValue] = useState<string>(value)
+  const [popValue, setPopValue] = useState<string>(value.toString())
   const tooltip = useTooltipState({ placement: "right", onOpenChange() {} })
   const [error, setError] = useState<false | ValidationError>(false)
   const popover = usePopoverState({
@@ -59,6 +59,7 @@ export const EmailCell = ({ context}: Props) => {
       }
     },
   })
+  const numberPopover = usePopoverState({placement: 'bottom-start'})
 
   useUpdateEffect(() => {
     tooltip.setOpen(!!error)
@@ -68,10 +69,9 @@ export const EmailCell = ({ context}: Props) => {
     setValue(initialValue)
   }, [row.original.id])
 
-
-  const onEmailClick = (e: BaseSyntheticEvent) => {
+  const onNumberClick = (e: BaseSyntheticEvent) => {
     e.stopPropagation()
-    window.location.href = `mailto:${context.cell.getValue()}`
+    // window.location.href = `mailto:${context.cell.getValue()}`
   }
 
   return (
@@ -80,14 +80,15 @@ export const EmailCell = ({ context}: Props) => {
         <div
           ref={ref}
           style={{ width: cell.column.getSize() }}
-          tabIndex={0}
-          className="group/cell relative border-r px-2 py-1 underline underline-offset-4">
+          className="group/cell relative border-r px-2 py-1 text-right">
           {value}
-          <div className="absolute top-2 right-2 hidden group-hover/cell:block">
-            <Icon
-              name="mdi-at"
-              onClick={onEmailClick}
-            /> 
+          <div className="absolute top-2 left-2 hidden group-hover/cell:block">
+            <PopoverAnchor state={numberPopover} asChild>
+              <Icon
+                name="mdi-numeric"
+                onClick={onNumberClick}
+              /> 
+            </PopoverAnchor>
           </div>
         </div>
       </PopoverAnchor>
@@ -101,7 +102,7 @@ export const EmailCell = ({ context}: Props) => {
               width: ref.current?.offsetWidth,
               height: ref.current?.offsetHeight,
             }}
-            className={`rounded-sm ring-offset-1 ring-offset-gray-400 ${
+            className={`rounded-sm ring-offset-1 ring-offset-gray-400 text-right ${
               error ? "ring-2 ring-red-500" : "ring-2"
             }`}></input>
         </TooltipAnchor>
@@ -109,7 +110,9 @@ export const EmailCell = ({ context}: Props) => {
           <div>{error && error.errors[0]}</div>
         </Tooltip>
       </Popover>
+      <Popover state={numberPopover}>
+          慢点
+      </Popover>
     </>
   )
 }
-

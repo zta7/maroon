@@ -23,8 +23,10 @@ import { PhoneHeader } from "./headers/PhoneHeader"
 import { PhoneCell } from "./cells/PhoneCell"
 import { DateCell } from "./cells/DateCell"
 import { DateHeader } from "./headers/DateHeader"
-import { User, userSchema } from "src/schema/User"
+import { userSchema } from "src/schema/User"
 import { ObjectSchema } from "yup"
+import { NumberHeader } from "./headers/NumberHeader"
+import { NumberCell } from "./cells/NumberCell"
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -67,6 +69,17 @@ export const Table = () => {
         ),
         cell: (context: CellContext<any, unknown>) => (
           <EmailCell context={context} />
+        ),
+      },
+      {
+        accessorKey: "salary",
+        minSize: 100,
+        size: 200,
+        header: (context: HeaderContext<any, unknown>) => (
+          <NumberHeader context={context} />
+        ),
+        cell: (context: CellContext<any, unknown>) => (
+          <NumberCell context={context} />
         ),
       },
       {
