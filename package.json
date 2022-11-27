@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "downshift": "^7.0.4"
+  }
+}

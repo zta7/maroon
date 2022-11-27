@@ -1,25 +1,27 @@
-import { forwardRef } from "react"
+import { forwardRef, HTMLProps } from "react"
 
-interface CardProps {
-  children: React.ReactNode
-}
-export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
-  { children },
-  ref
-) {
+export const Card = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
+  function Card({ children, className = "", ...props }, ref) {
+    return (
+      <div
+        className={["rounded bg-white px-2 py-1 shadow-lg", className].join(
+          " "
+        )}
+        {...props}
+        ref={ref}>
+        {children}
+      </div>
+    )
+  }
+)
+
+export const CardSection = forwardRef<
+  HTMLDivElement,
+  HTMLProps<HTMLDivElement>
+>(function CardSection({ children, ...props }, ref) {
   return (
-    <div className="rounded border bg-white" ref={ref}>
+    <div {...props} ref={ref}>
       {children}
     </div>
   )
 })
-
-interface CardSectionProps {
-  children: React.ReactNode
-}
-
-export const CardSection = forwardRef<HTMLDivElement, CardSectionProps>(
-  function CardSection({ children }, ref) {
-    return <div ref={ref}>{children}</div>
-  }
-)

@@ -97,7 +97,7 @@ export const Dialog = forwardRef<
         <Fade state={state.open}>
           <FloatingOverlay
             lockScroll
-            className="flex items-center justify-center bg-indigo-500/30">
+            className="items-center justify-center bg-indigo-500/30">
             <FloatingFocusManager context={state.context}>
               <div
                 style={{

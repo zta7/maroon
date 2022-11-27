@@ -1,4 +1,5 @@
 import { forwardRef, ReactNode } from "react"
+import cx from "classnames"
 
 interface Props {
   column?: boolean
@@ -13,9 +14,7 @@ export const Stack = forwardRef<
   propRef
 ) {
   className += " "
-  className += column
-    ? "flex flex-col no-wrap justify-center"
-    : "flex flex-row no-wrap items-center"
+  className += column ? "flex flex-col no-wrap" : "flex flex-row no-wrap"
   if (gap) {
     if (column) className += " " + "gap-y-1"
     else className += " " + "gap-x-1"

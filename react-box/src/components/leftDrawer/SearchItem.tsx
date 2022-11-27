@@ -12,9 +12,9 @@ export const SearchItem = () => {
     <>
       <TooltipAnchor state={tooltip} asChild>
         <DialogAnchor state={dialog} asChild>
-          <Item rounded ref={ref} aria-disabled={true}>
+          <Item rounded ref={ref}>
             <Icon className="mr-2" name="mdi-search" />
-            <span className="text-sm">Search</span>
+            <span>Search</span>
           </Item>
         </DialogAnchor>
       </TooltipAnchor>

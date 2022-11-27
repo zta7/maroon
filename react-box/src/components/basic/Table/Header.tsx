@@ -51,7 +51,7 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
   const [springs, api] = useSprings(headers.length, fn(headers))
 
   const dragBind = useDrag(
-    async ({ args: [header], active, movement: [x] }) => {
+    async ({ args: [header], active, movement: [x], event }) => {
       const curIndex = headers.indexOf(header)
       const toIndex = findClosestIndex(
         headers.map((header) => header.getStart()),
@@ -65,9 +65,6 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
         api.start((e) => ({ x: 0, immediate: true }))
         table.setColumnOrder(newOrder.map((e: any) => e.id))
       }
-    },
-    {
-      delay: 100,
     }
   )
 
@@ -76,6 +73,7 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
       <div className="flex flex-row">
         {springs.map((style, i) => {
           const header = headers[i]
+          // console.log(dragBind(header))
           return (
             <animated.div
               key={i}

@@ -4,7 +4,7 @@ export const userSchema = object({
   name: string().required(),
   phone: string(),
   email: string().email(),
-  salary: number()
+  salary: number(),
   // website: string().url().nullable(),
   // createdOn: date().default(() => new Date()),
 })

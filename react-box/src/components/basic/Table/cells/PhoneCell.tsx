@@ -1,13 +1,7 @@
 import { offset } from "@floating-ui/react-dom-interactions"
 import { CellContext } from "@tanstack/react-table"
-import {
-  ReactNode,
-  useRef,
-  useState,
-} from "react"
-import {
-  useUpdateEffect,
-} from "react-use"
+import { ReactNode, useRef, useState } from "react"
+import { useUpdateEffect } from "react-use"
 import { ValidationError } from "yup"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
 import { Tooltip, TooltipAnchor, useTooltipState } from "../../Tooltip"
@@ -18,7 +12,11 @@ interface Props {
   contentClassName?: string
 }
 
-export const PhoneCell = ({ context, children, contentClassName = '' }: Props) => {
+export const PhoneCell = ({
+  context,
+  children,
+  contentClassName = "",
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const { row, getValue, cell, table, column } = context
   const initialValue = (getValue() as string) || ""
@@ -27,7 +25,7 @@ export const PhoneCell = ({ context, children, contentClassName = '' }: Props) =
   const tooltip = useTooltipState({ placement: "right", onOpenChange() {} })
   const [error, setError] = useState<false | ValidationError>(false)
   const popover = usePopoverState({
-    placement: "right",
+    placement: "right-start",
     middleware: [
       offset(({ rects }) => {
         return -rects.reference.width
@@ -68,7 +66,6 @@ export const PhoneCell = ({ context, children, contentClassName = '' }: Props) =
     setValue(initialValue)
   }, [row.original.id])
 
-
   return (
     <>
       <PopoverAnchor state={popover} asChild>
@@ -87,7 +84,7 @@ export const PhoneCell = ({ context, children, contentClassName = '' }: Props) =
           <input
             autoFocus
             value={popValue}
-            onChange={e => setPopValue(e.target.value)}
+            onChange={(e) => setPopValue(e.target.value)}
             style={{
               width: ref.current?.offsetWidth,
               height: ref.current?.offsetHeight,

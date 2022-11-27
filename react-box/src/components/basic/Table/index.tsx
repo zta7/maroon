@@ -57,7 +57,10 @@ export const Table = () => {
           <SelectHeader context={context} />
         ),
         cell: (context: CellContext<any, unknown>) => (
-          <SelectCell context={context} options={[1, 2, 3, 4]} />
+          <SelectCell
+            context={context}
+            options={Array.from({ length: 50 }).map((e, i) => `${i}`)}
+          />
         ),
       },
       {

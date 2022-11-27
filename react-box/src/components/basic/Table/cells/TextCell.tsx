@@ -16,7 +16,6 @@ export const TextCell = ({ context }: Props) => {
     placement: "right",
     middleware: [
       offset(({ rects }) => {
-        console.log(rects.reference.width)
         return -rects.reference.width
       }),
     ],
@@ -43,11 +42,7 @@ export const TextCell = ({ context }: Props) => {
         </div>
       </PopoverAnchor>
       <Popover state={popover}>
-        <input
-          autoFocus
-          value={value}
-          onChange={onChange}
-          className="ring"></input>
+        <input autoFocus value={value} onChange={onChange}></input>
       </Popover>
     </>
   )

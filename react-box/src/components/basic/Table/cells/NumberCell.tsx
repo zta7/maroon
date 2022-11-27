@@ -1,14 +1,7 @@
 import { offset } from "@floating-ui/react-dom-interactions"
 import { CellContext } from "@tanstack/react-table"
-import {
-  BaseSyntheticEvent,
-  ReactNode,
-  useRef,
-  useState,
-} from "react"
-import {
-  useUpdateEffect,
-} from "react-use"
+import { BaseSyntheticEvent, ReactNode, useRef, useState } from "react"
+import { useUpdateEffect } from "react-use"
 import { ValidationError } from "yup"
 import { Icon } from "../../Icon"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
@@ -27,7 +20,7 @@ export const NumberCell = ({ context }: Props) => {
   const tooltip = useTooltipState({ placement: "right", onOpenChange() {} })
   const [error, setError] = useState<false | ValidationError>(false)
   const popover = usePopoverState({
-    placement: "right",
+    placement: "right-start",
     middleware: [
       offset(({ rects }) => {
         return -rects.reference.width
@@ -59,7 +52,7 @@ export const NumberCell = ({ context }: Props) => {
       }
     },
   })
-  const numberPopover = usePopoverState({placement: 'bottom-start'})
+  const numberPopover = usePopoverState({ placement: "bottom-start" })
 
   useUpdateEffect(() => {
     tooltip.setOpen(!!error)
@@ -84,10 +77,7 @@ export const NumberCell = ({ context }: Props) => {
           {value}
           <div className="absolute top-2 left-2 hidden group-hover/cell:block">
             <PopoverAnchor state={numberPopover} asChild>
-              <Icon
-                name="mdi-numeric"
-                onClick={onNumberClick}
-              /> 
+              <Icon name="mdi-numeric" onClick={onNumberClick} />
             </PopoverAnchor>
           </div>
         </div>
@@ -97,21 +87,21 @@ export const NumberCell = ({ context }: Props) => {
           <input
             autoFocus
             value={popValue}
-            onChange={e => setPopValue(e.target.value)}
+            onChange={(e) => setPopValue(e.target.value)}
             style={{
               width: ref.current?.offsetWidth,
               height: ref.current?.offsetHeight,
             }}
-            className={`rounded-sm ring-offset-1 ring-offset-gray-400 text-right ${
+            className={`rounded-sm text-right ring-offset-1 ring-offset-gray-400 ${
               error ? "ring-2 ring-red-500" : "ring-2"
             }`}></input>
         </TooltipAnchor>
-        <Tooltip state={tooltip}>
-          <div>{error && error.errors[0]}</div>
-        </Tooltip>
       </Popover>
+      <Tooltip state={tooltip}>
+        <div>{error && error.errors[0]}</div>
+      </Tooltip>
       <Popover state={numberPopover}>
-          慢点
+        <div>慢点</div>
       </Popover>
     </>
   )

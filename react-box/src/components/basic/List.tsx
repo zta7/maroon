@@ -1,47 +1,43 @@
-import { Children, forwardRef } from "react"
+import { forwardRef, HTMLProps } from "react"
+import cx from "classnames"
 
-export const List = <T extends React.HTMLProps<Element>>({
-  className = "",
-  style,
-  children,
-}: T) => {
-  const _className = "relative flex flex-col flex-nowrap" + " "
-  className = _className + className
+export const List = forwardRef<
+  HTMLDivElement,
+  HTMLProps<HTMLDivElement> & {
+    rounded?: boolean
+    active?: Boolean
+  }
+>(function List({ className = "", children, ...props }, propRef) {
   return (
-    <div className={className} style={style}>
+    <div
+      ref={propRef}
+      className={cx(["relative flex flex-col flex-nowrap", className])}
+      {...props}>
       {children}
     </div>
   )
-}
+})
 
 export const Item = forwardRef<
   HTMLDivElement,
-  React.HTMLProps<HTMLElement> & {
-    rounded?: Boolean
+  HTMLProps<HTMLElement> & {
+    rounded?: boolean
     active?: Boolean
   }
 >(function Item(
-  { className = "", children, rounded = false, active = false, onClick },
+  { className = "", children, rounded = false, active = false, ...props },
   ref
 ) {
-  const arr = Children.toArray(children)
-
-  let _className =
-    "relative flex flex-row flex-nowrap items-center hover:bg-neutral-200 cursor-pointer" +
-    " "
-  if (arr.length > 1) {
-    if (rounded) _className += "rounded-md mx-1 px-2 py-1" + " "
-    else _className += "px-3 py-1" + " "
-  } else if (arr.length === 1) {
-    _className += "p-1 rounded-md" + " "
-  }
-
-  if (active) _className += "bg-neutral-200"
-
-  className = _className + className
-
   return (
-    <div className={className} onClick={onClick} ref={ref}>
+    <div
+      className={[
+        `relative flex cursor-pointer flex-row flex-nowrap items-center px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 ${
+          rounded ? "rounded" : ""
+        } ${active ? "bg-neutral-200" : ""}`,
+        className,
+      ].join(" ")}
+      {...props}
+      ref={ref}>
       {children}
     </div>
   )

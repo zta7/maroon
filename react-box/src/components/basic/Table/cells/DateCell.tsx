@@ -39,7 +39,9 @@ export const DateCell = ({ context }: Props) => {
           {value}
         </div>
       </PopoverAnchor>
-      <Popover state={popover}>{/* - -! */}</Popover>
+      <Popover state={popover}>
+        <div>123</div>
+      </Popover>
     </>
   )
 }

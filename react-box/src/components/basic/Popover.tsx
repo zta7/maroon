@@ -12,18 +12,23 @@ import {
   flip,
   FloatingOverlay,
   Middleware,
+  size,
+  limitShift,
 } from "@floating-ui/react-dom-interactions"
 import { Props } from "@floating-ui/react-dom-interactions/src/hooks/useDismiss"
+import { unionBy } from "lodash"
 import {
   cloneElement,
   forwardRef,
   isValidElement,
+  ReactComponentElement,
   ReactNode,
   useMemo,
   useState,
 } from "react"
 import { mergeRefs } from "react-merge-refs"
 import { animated, useTransition } from "react-spring"
+import { Card } from "./Card"
 
 interface usePopoverStateProps {
   placement: Placement
@@ -42,7 +47,30 @@ export const usePopoverState = ({
     open,
     onOpenChange: onOpenChange || setOpen,
     whileElementsMounted: autoUpdate,
-    middleware,
+    middleware: unionBy(middleware, [
+      size({
+        apply(state) {
+          console.log(state)
+          const { elements, rects, availableHeight, x, y } = state
+          // Object.assign(elements.floating.style, {
+          //   top: 0,
+          //   left: 0,
+          //   transform: `translate(${Math.round(x)}px,${Math.round(y)}px)`,
+          // })
+        },
+      }),
+      shift({
+        mainAxis: true,
+        crossAxis: true,
+        padding: 12,
+        // limiter: limitShift({
+        //   offset: {
+        //     mainAxis: 200,
+        //     crossAxis: 200,
+        //   },
+        // }),
+      }),
+    ]),
   })
   const context = data.context
 
@@ -100,7 +128,9 @@ export const PopoverAnchor = forwardRef<HTMLElement, PopoverAnchorProps>(
 
 export const Popover = forwardRef<
   HTMLDivElement,
-  React.HTMLProps<HTMLDivElement> & { state: PopoverState }
+  React.HTMLProps<HTMLDivElement> & {
+    state: PopoverState
+  }
 >(function Popover({ state, ...props }, propRef) {
   const ref = useMemo(
     () => mergeRefs([state.floating, propRef]),
@@ -114,27 +144,26 @@ export const Popover = forwardRef<
   // })
 
   return (
-    <>
-      <FloatingPortal>
-        {state.open && (
-          <FloatingOverlay lockScroll className="z-50">
-            <FloatingFocusManager
-              context={state.context}
-              modal={false}
-              order={["reference", "content"]}
-              returnFocus={false}>
-              <div
-                style={{
-                  position: "absolute",
-                  top: state.y ?? 0,
-                  left: state.x ?? 0,
-                }}
-                ref={ref}
-                {...state.getFloatingProps(props)}></div>
-            </FloatingFocusManager>
-          </FloatingOverlay>
-        )}
-        {/* {transitions((styles, bool) => {
+    <FloatingPortal>
+      {state.open && (
+        <FloatingOverlay>
+          <div
+            style={{
+              position: "absolute",
+              // top: state.y ?? 0,
+              // left: state.x ?? 0,
+              transform: `translate(${Math.round(state.x ?? 0)}px,${Math.round(
+                state.y ?? 0
+              )}px)`,
+              maxWidth: "calc(100vw - 24px)",
+              maxHeight: "calc(100vh - 24px)",
+            }}
+            className="overflow-auto rounded border bg-white px-2 py-1 shadow-lg"
+            ref={ref}
+            {...state.getFloatingProps(props)}></div>
+        </FloatingOverlay>
+      )}
+      {/* {transitions((styles, bool) => {
           return (
             bool && (
               <FloatingOverlay lockScroll className="z-50">
@@ -158,7 +187,6 @@ export const Popover = forwardRef<
             )
           )
         })} */}
-      </FloatingPortal>
-    </>
+    </FloatingPortal>
   )
 })

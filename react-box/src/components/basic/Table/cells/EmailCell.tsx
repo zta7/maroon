@@ -1,14 +1,7 @@
 import { offset } from "@floating-ui/react-dom-interactions"
 import { CellContext } from "@tanstack/react-table"
-import {
-  BaseSyntheticEvent,
-  ReactNode,
-  useRef,
-  useState,
-} from "react"
-import {
-  useUpdateEffect,
-} from "react-use"
+import { BaseSyntheticEvent, ReactNode, useRef, useState } from "react"
+import { useUpdateEffect } from "react-use"
 import { ValidationError } from "yup"
 import { Icon } from "../../Icon"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
@@ -18,7 +11,7 @@ interface Props {
   context: CellContext<any, unknown>
 }
 
-export const EmailCell = ({ context}: Props) => {
+export const EmailCell = ({ context }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const { row, getValue, cell, table, column } = context
   const initialValue = (getValue() as string) || ""
@@ -68,7 +61,6 @@ export const EmailCell = ({ context}: Props) => {
     setValue(initialValue)
   }, [row.original.id])
 
-
   const onEmailClick = (e: BaseSyntheticEvent) => {
     e.stopPropagation()
     window.location.href = `mailto:${context.cell.getValue()}`
@@ -84,10 +76,7 @@ export const EmailCell = ({ context}: Props) => {
           className="group/cell relative border-r px-2 py-1 underline underline-offset-4">
           {value}
           <div className="absolute top-2 right-2 hidden group-hover/cell:block">
-            <Icon
-              name="mdi-at"
-              onClick={onEmailClick}
-            /> 
+            <Icon name="mdi-at" onClick={onEmailClick} />
           </div>
         </div>
       </PopoverAnchor>
@@ -96,7 +85,7 @@ export const EmailCell = ({ context}: Props) => {
           <input
             autoFocus
             value={popValue}
-            onChange={e => setPopValue(e.target.value)}
+            onChange={(e) => setPopValue(e.target.value)}
             style={{
               width: ref.current?.offsetWidth,
               height: ref.current?.offsetHeight,
@@ -112,4 +101,3 @@ export const EmailCell = ({ context}: Props) => {
     </>
   )
 }
-
