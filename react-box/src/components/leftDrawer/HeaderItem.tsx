@@ -32,7 +32,7 @@ export const HeaderItem = ({ setBeforeMouseFirstMove }: Props) => {
   return (
     <Stack className="btn h-10 shrink-0 px-3">
       <PopoverAnchor asChild state={popover}>
-        <Stack className="grow" onClick={() => popover.setOpen(true)}>
+        <Stack className="grow">
           <Icon name="mdi-coffee" className="mr-2" />
           <span className="mr-2">Bingo</span>
           <Icon name="mdi-more" />

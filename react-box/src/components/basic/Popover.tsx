@@ -144,7 +144,7 @@ export const Popover = forwardRef<
   // })
 
   return (
-    <FloatingPortal>
+    <>
       {state.open && (
         <FloatingOverlay>
           <div
@@ -187,6 +187,6 @@ export const Popover = forwardRef<
             )
           )
         })} */}
-    </FloatingPortal>
+    </>
   )
 })

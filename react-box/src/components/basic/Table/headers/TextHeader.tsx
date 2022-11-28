@@ -11,14 +11,10 @@ interface Props {
 export const TextHeader = ({ context }: Props) => {
   const { header, column } = context
   const popover = usePopoverState({ placement: "bottom-start" })
-  const a = (e) => {
-    console.log('fk')
-    // e.stopPropagation()
-  }
   return (
     <>
       <PopoverAnchor state={popover} asChild>
-        <Stack className="btn h-full w-full px-2 text-neutral-400" onPointerUp={a} >
+        <Stack className="btn h-full w-full px-2 text-neutral-400">
           <Icon name="mdi-text" className="mr-2 text-xl" />
           <div className="text-sm" >{header.id}</div>
         </Stack>

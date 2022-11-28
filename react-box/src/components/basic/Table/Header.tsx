@@ -50,38 +50,35 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
     }
   const [springs, api] = useSprings(headers.length, fn(headers))
 
+  let lastX = 0
   const dragBind = useGesture(
     {
-      onDrag: async ({ args: [header], active, movement: [x], dragging, event }) => {
+      onDrag: async ({ args: [header], active, movement: [x], dragging, event, cancel }) => {
         const curIndex = headers.indexOf(header)
         const toIndex = findClosestIndex(
           headers.map((header) => header.getStart()),
           headers[curIndex].getStart() + x
         )
-  
+          
         const newOrder = swap(headers, curIndex, toIndex)
         const promises = api.start(fn(newOrder, curIndex, x, active))
-
-
+        console.log(event)
         if (!active) {
-          if(event.type === 'pointerup' && x !== 0) {
-            event.stopPropagation();
-          }
-
+          console.log('should canceled')
+          lastX = x
           await Promise.all(promises)
           api.start((e) => ({ x: 0, immediate: true }))
           table.setColumnOrder(newOrder.map((e: any) => e.id))
         }
       },
       onClickCapture: ({event, ...state}) => {
-        console.log(state)
-        event.stopPropagation();
-        // header.dragging = false
+        if(lastX !== 0)
+          event.stopPropagation();
       }
     },
     {
       eventOptions: {
-        capture: true
+        capture: false
       }
     }
   )

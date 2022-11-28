@@ -10,7 +10,7 @@ export const UpdateItem = () => {
     <>
       <TooltipAnchor state={tooltip} asChild>
         <PopoverAnchor state={popover} asChild>
-          <Item rounded onClick={() => popover.setOpen(true)}>
+          <Item rounded>
             <Icon className="mr-2" name="mdi-update" />
             <span className="text-sm">Update</span>
           </Item>
