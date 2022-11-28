@@ -4,8 +4,8 @@ import {
   Header as _Header,
   Table,
 } from "@tanstack/react-table"
-import { useDrag } from "@use-gesture/react"
-import { forwardRef } from "react"
+import { useDrag, useGesture } from "@use-gesture/react"
+import { cloneElement, forwardRef, ReactElement, ReactNode } from "react"
 import { animated, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"
@@ -50,43 +50,69 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
     }
   const [springs, api] = useSprings(headers.length, fn(headers))
 
-  const dragBind = useDrag(
-    async ({ args: [header], active, movement: [x], event }) => {
-      const curIndex = headers.indexOf(header)
-      const toIndex = findClosestIndex(
-        headers.map((header) => header.getStart()),
-        headers[curIndex].getStart() + x
-      )
+  const dragBind = useGesture(
+    {
+      onDrag: async ({ args: [header], active, movement: [x], dragging, event }) => {
+        const curIndex = headers.indexOf(header)
+        const toIndex = findClosestIndex(
+          headers.map((header) => header.getStart()),
+          headers[curIndex].getStart() + x
+        )
+  
+        const newOrder = swap(headers, curIndex, toIndex)
+        const promises = api.start(fn(newOrder, curIndex, x, active))
 
-      const newOrder = swap(headers, curIndex, toIndex)
-      const promises = api.start(fn(newOrder, curIndex, x, active))
-      if (!active) {
-        await Promise.all(promises)
-        api.start((e) => ({ x: 0, immediate: true }))
-        table.setColumnOrder(newOrder.map((e: any) => e.id))
+
+        if (!active) {
+          if(event.type === 'pointerup' && x !== 0) {
+            event.stopPropagation();
+          }
+
+          await Promise.all(promises)
+          api.start((e) => ({ x: 0, immediate: true }))
+          table.setColumnOrder(newOrder.map((e: any) => e.id))
+        }
+      },
+      onClickCapture: ({event, ...state}) => {
+        console.log(state)
+        event.stopPropagation();
+        // header.dragging = false
+      }
+    },
+    {
+      eventOptions: {
+        capture: true
       }
     }
   )
+
 
   return (
     <div className="sticky top-0 flex h-8 flex-row border-t border-b bg-white">
       <div className="flex flex-row">
         {springs.map((style, i) => {
           const header = headers[i]
+          // console.log(cloneElement(
+          //   flexRender(
+          //     header.column.columnDef.header,
+          //     header.getContext()
+          //   ) as ReactElement,
+          //   {style: {background: 'red'}}
+          // ))
           // console.log(dragBind(header))
           return (
             <animated.div
               key={i}
               style={{ ...style, width: header.getSize() }}
-              className="relative border-r">
-              <div className="h-full touch-none" {...dragBind(header)}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
+              className="relative border-r h-full touch-none" {...dragBind(header)}>
+                {
+                  header.isPlaceholder
+                    ? null
+                    : flexRender(
                       header.column.columnDef.header,
                       header.getContext()
-                    )}
-              </div>
+                    )
+                }
               <div
                 onMouseDown={header.getResizeHandler()}
                 onTouchStart={header.getResizeHandler()}

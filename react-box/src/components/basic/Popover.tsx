@@ -75,7 +75,7 @@ export const usePopoverState = ({
   const context = data.context
 
   const interactions = useInteractions([
-    useClick(context),
+    // useClick(context),
     useRole(context),
     useDismiss(context),
   ])

@@ -22,7 +22,7 @@ export const UpdateItem = () => {
       </Tooltip>
 
       <Popover state={popover}>
-        <div className="bg-red-800">
+        <div>
           12333333333333333333333333333333333333333
         </div>
       </Popover>
