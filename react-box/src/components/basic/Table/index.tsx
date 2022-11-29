@@ -7,6 +7,11 @@ import {
   CellContext,
   HeaderContext,
   RowData,
+  Table as _Table,
+  Header as _Header,
+  Column,
+  CoreHeader,
+  ColumnSizingHeader,
 } from "@tanstack/react-table"
 
 import { useQuery } from "@tanstack/react-query"
@@ -33,6 +38,9 @@ declare module "@tanstack/react-table" {
     updateColumn: (id: string, columnId: string, value: unknown) => void
     schema: ObjectSchema<any>
   }
+  interface Header<TData extends RowData, TValue> extends CoreHeader<TData, TValue>, ColumnSizingHeader {
+    isDragging: boolean
+  }
 }
 
 export const Table = () => {
@@ -42,9 +50,11 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
-        header: (context: HeaderContext<any, unknown>) => (
-          <TextHeader context={context} />
-        ),
+        header: (context: HeaderContext<any, unknown>) => {
+          return (
+            <TextHeader context={context}/>
+          )
+        },
         cell: (context: CellContext<any, unknown>) => (
           <TextCell context={context} />
         ),

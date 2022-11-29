@@ -5,8 +5,8 @@ import {
   Table,
 } from "@tanstack/react-table"
 import { useDrag, useGesture } from "@use-gesture/react"
-import { cloneElement, forwardRef, ReactElement, ReactNode } from "react"
-import { animated, useSprings } from "react-spring"
+import { cloneElement, forwardRef, ReactElement, ReactNode, useEffect, useRef, useState } from "react"
+import { animated, useSpringRef, useSprings } from "react-spring"
 import { findClosestIndex } from "src/helper"
 import swap from "lodash-move"
 // import { ActionHeader } from "./headers/ActionHeader"
@@ -48,66 +48,66 @@ export const Header = forwardRef<HTMLDivElement, Props>(function Header(
         }
       }
     }
-  const [springs, api] = useSprings(headers.length, fn(headers))
 
-  let lastX = 0
+  const [springs, api] = useSprings(headers.length, fn(headers))
+  const headerRefs = useRef<HTMLElement[]>([])
+
+  useEffect(
+    () => {
+      headerRefs.current = headerRefs.current.slice(0, headers.length)
+   }, [headers]
+  )
+
   const dragBind = useGesture(
     {
-      onDrag: async ({ args: [header], active, movement: [x], dragging, event, cancel }) => {
+      onDrag: async ({ args: [_header], active, movement: [x], event, cancel }) => {
+        let header = _header as _Header<any, unknown>
         const curIndex = headers.indexOf(header)
+        const headerRef = headerRefs.current[curIndex]
+
+        if(event.target && !headerRef.contains(event.target as Node)) cancel()
+
         const toIndex = findClosestIndex(
           headers.map((header) => header.getStart()),
           headers[curIndex].getStart() + x
         )
+
+        header.isDragging = true
           
         const newOrder = swap(headers, curIndex, toIndex)
         const promises = api.start(fn(newOrder, curIndex, x, active))
-        console.log(event)
         if (!active) {
-          console.log('should canceled')
-          lastX = x
           await Promise.all(promises)
           api.start((e) => ({ x: 0, immediate: true }))
-          table.setColumnOrder(newOrder.map((e: any) => e.id))
+          header.isDragging = false
+          // table.setColumnOrder(newOrder.map((e: any) => e.id))
         }
       },
-      onClickCapture: ({event, ...state}) => {
-        if(lastX !== 0)
-          event.stopPropagation();
-      }
+      // onClickCapture: ({event, ...state}) => {
+      //   if(lastX !== 0)
+      //     event.stopPropagation();
+      // }
     },
-    {
-      eventOptions: {
-        capture: false
-      }
-    }
   )
-
 
   return (
     <div className="sticky top-0 flex h-8 flex-row border-t border-b bg-white">
       <div className="flex flex-row">
         {springs.map((style, i) => {
           const header = headers[i]
-          // console.log(cloneElement(
-          //   flexRender(
-          //     header.column.columnDef.header,
-          //     header.getContext()
-          //   ) as ReactElement,
-          //   {style: {background: 'red'}}
-          // ))
           // console.log(dragBind(header))
           return (
             <animated.div
               key={i}
               style={{ ...style, width: header.getSize() }}
+              ref={el => headerRefs.current[i] =  el }
               className="relative border-r h-full touch-none" {...dragBind(header)}>
                 {
                   header.isPlaceholder
                     ? null
                     : flexRender(
                       header.column.columnDef.header,
-                      header.getContext()
+                      header.getContext(),
                     )
                 }
               <div

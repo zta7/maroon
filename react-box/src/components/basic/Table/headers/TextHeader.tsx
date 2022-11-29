@@ -3,6 +3,7 @@ import { Icon } from "../../Icon"
 import { Item } from "../../List"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
 import { Stack } from "../../Stack"
+import { Switch } from "../../Switch"
 
 interface Props {
   context: HeaderContext<any, unknown>
@@ -10,7 +11,15 @@ interface Props {
 
 export const TextHeader = ({ context }: Props) => {
   const { header, column } = context
-  const popover = usePopoverState({ placement: "bottom-start" })
+  const popover = usePopoverState({ placement: "bottom-start", onOpenChange: (v) => {
+    console.log(v, header.isDragging)
+    if(v) {
+      if(!header.isDragging) popover.setOpen(v)
+    }
+    else {
+      popover.setOpen(v)
+    }
+  }})
   return (
     <>
       <PopoverAnchor state={popover} asChild>
@@ -26,6 +35,7 @@ export const TextHeader = ({ context }: Props) => {
           <Item rounded>Hide in view</Item>
           <Item rounded>
             <span>Wrap column</span>
+            <Switch />
           </Item>
         </Stack>
       </Popover>

@@ -75,7 +75,7 @@ export const usePopoverState = ({
   const context = data.context
 
   const interactions = useInteractions([
-    // useClick(context),
+    useClick(context),
     useRole(context),
     useDismiss(context),
   ])
@@ -142,26 +142,28 @@ export const Popover = forwardRef<
   //   enter: { opacity: 1 },
   //   leave: { opacity: 0 },
   // })
-
+  // console.log(state.getFloatingProps(props))
   return (
-    <>
+    <FloatingPortal>
       {state.open && (
-        <FloatingOverlay>
-          <div
-            style={{
-              position: "absolute",
-              // top: state.y ?? 0,
-              // left: state.x ?? 0,
-              transform: `translate(${Math.round(state.x ?? 0)}px,${Math.round(
-                state.y ?? 0
-              )}px)`,
-              maxWidth: "calc(100vw - 24px)",
-              maxHeight: "calc(100vh - 24px)",
-            }}
-            className="overflow-auto rounded border bg-white px-2 py-1 shadow-lg"
-            ref={ref}
-            {...state.getFloatingProps(props)}></div>
-        </FloatingOverlay>
+          <div>
+          <FloatingOverlay>
+            <div
+              style={{
+                position: "absolute",
+                // top: state.y ?? 0,
+                // left: state.x ?? 0,
+                transform: `translate(${Math.round(state.x ?? 0)}px,${Math.round(
+                  state.y ?? 0
+                )}px)`,
+                maxWidth: "calc(100vw - 24px)",
+                maxHeight: "calc(100vh - 24px)",
+              }}
+              className="overflow-auto rounded border bg-white px-2 py-1 shadow-lg pointer-events-auto"
+              ref={ref}
+              {...state.getFloatingProps(props)}></div>
+          </FloatingOverlay>
+          </div>
       )}
       {/* {transitions((styles, bool) => {
           return (
@@ -187,6 +189,6 @@ export const Popover = forwardRef<
             )
           )
         })} */}
-    </>
+    </FloatingPortal>
   )
 })
