@@ -9,15 +9,15 @@ import {
   RowData,
   Table as _Table,
   Header as _Header,
-  Column,
   CoreHeader,
   ColumnSizingHeader,
+  Column as _Column
 } from "@tanstack/react-table"
 
 import { useQuery } from "@tanstack/react-query"
 import { api } from "src/boot/axios"
 import { Fragment, useMemo, useState } from "react"
-import { Header } from "./Header"
+import { Headers } from "./Headers"
 import { TextCell } from "./cells/TextCell"
 import { TextHeader } from "./headers/TextHeader"
 import { SelectCell } from "./cells/SelectCell"
@@ -32,16 +32,9 @@ import { userSchema } from "src/schema/User"
 import { ObjectSchema } from "yup"
 import { NumberHeader } from "./headers/NumberHeader"
 import { NumberCell } from "./cells/NumberCell"
+import { Cell } from "./Cell"
+import { Row } from "./Row"
 
-declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends RowData> {
-    updateColumn: (id: string, columnId: string, value: unknown) => void
-    schema: ObjectSchema<any>
-  }
-  interface Header<TData extends RowData, TValue> extends CoreHeader<TData, TValue>, ColumnSizingHeader {
-    isDragging: boolean
-  }
-}
 
 export const Table = () => {
   const columns = useMemo(
@@ -50,6 +43,9 @@ export const Table = () => {
         accessorKey: "name",
         minSize: 100,
         size: 150,
+        meta: {
+          wrap: true
+        },
         header: (context: HeaderContext<any, unknown>) => {
           return (
             <TextHeader context={context}/>
@@ -192,34 +188,15 @@ export const Table = () => {
       },
     },
   })
-
+  // console.log(table.getAllLeafColumns(), table.getLeafHeaders())
   return (
     <>
       <div className="relative h-full w-full">
         <div className="w-max min-w-full">
-          <Header table={table} headers={table.getLeafHeaders()}></Header>
+          <Headers headers={table.getLeafHeaders()}></Headers>
           <div>
             {table.getRowModel().rows.map((row) => {
-              return (
-                <div
-                  key={row.id}
-                  className="no-wrap relative flex flex-row border-b last:border-b-0">
-                  <>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        // <div
-                        //   key={cell.id}
-                        <Fragment key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </Fragment>
-                      )
-                    })}
-                  </>
-                </div>
-              )
+              return <Row row={row} key={row.id}/>
             })}
           </div>
           <div className="flex items-center gap-2">

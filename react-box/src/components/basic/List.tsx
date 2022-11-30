@@ -1,11 +1,11 @@
-import { forwardRef, HTMLProps } from "react"
+import { createFactory, forwardRef, HTMLProps } from "react"
 import cx from "classnames"
 
 export const List = forwardRef<
   HTMLDivElement,
   HTMLProps<HTMLDivElement> & {
     rounded?: boolean
-    active?: Boolean
+    active?: boolean
   }
 >(function List({ className = "", children, ...props }, propRef) {
   return (
@@ -22,12 +22,13 @@ export const Item = forwardRef<
   HTMLDivElement,
   HTMLProps<HTMLElement> & {
     rounded?: boolean
-    active?: Boolean
+    active?: boolean
   }
 >(function Item(
   { className = "", children, rounded = false, active = false, ...props },
   ref
 ) {
+  
   return (
     <div
       className={[

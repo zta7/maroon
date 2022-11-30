@@ -30,6 +30,7 @@ export const TextCell = ({ context }: Props) => {
     table.options.meta?.updateColumn(row.original.id, column.id, value)
   }
 
+  console.log(column.isDragging)
   // const [ref, { x, y, width, height }] = useMeasure<HTMLDivElement>()
 
   return (

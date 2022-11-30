@@ -1,4 +1,5 @@
 import { HeaderContext } from "@tanstack/react-table"
+import { useEffect, useState } from "react"
 import { Icon } from "../../Icon"
 import { Item } from "../../List"
 import { Popover, PopoverAnchor, usePopoverState } from "../../Popover"
@@ -10,16 +11,26 @@ interface Props {
 }
 
 export const TextHeader = ({ context }: Props) => {
-  const { header, column } = context
+  const { header, column, table } = context
   const popover = usePopoverState({ placement: "bottom-start", onOpenChange: (v) => {
-    console.log(v, header.isDragging)
     if(v) {
-      if(!header.isDragging) popover.setOpen(v)
+      if(!column.isDragging) popover.setOpen(v)
     }
     else {
       popover.setOpen(v)
     }
   }})
+  
+  const [meta, setMeta] = useState(column.columnDef.meta || {})
+  // table.set
+
+  // console.log(column.columnDef.meta = {})
+
+  const onWrapChange = (value: boolean) => {
+    setMeta(old => ({ ...old, wrap: value }))
+    console.log(value)
+  }
+  
   return (
     <>
       <PopoverAnchor state={popover} asChild>
@@ -33,9 +44,9 @@ export const TextHeader = ({ context }: Props) => {
           <Item rounded>Sort asc</Item>
           <Item rounded>Sort desc</Item>
           <Item rounded>Hide in view</Item>
-          <Item rounded>
-            <span>Wrap column</span>
-            <Switch />
+          <Item>
+            <span>Wrap column { JSON.stringify(meta) }</span>
+            <Switch onChange={onWrapChange}/>
           </Item>
         </Stack>
       </Popover>
